@@ -72,6 +72,46 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 - Management command or scraper to populate lab data
 - 352 SEAS faculty from scraper (see LABFORUM_CONTEXT.md)
 
+## Existing Detail Page Patterns (Reference)
+
+### Course Detail Page (`/course/<mnemonic>/<number>/`)
+- **Breadcrumb:** School / Department / Course Code
+- **Header:** Course code + title (large), "Add to Schedule" button (right)
+- **Semester toggle:** "Spring 2026" | "All" (orange pills, top right)
+- **Sort toolbar:** Last Taught | Rating | Difficulty | GPA (orange pills)
+- **Description card:** White card with left orange border, "Course Description" heading, body text
+- **Instructor rows:** Each instructor gets a row:
+  - Left: Blue block with instructor name (large white text, clickable)
+  - Right: Stat columns — RATING, DIFFICULTY, GPA, SECTIONS, LAST TAUGHT
+  - Stats show em-dash (`—`) when no data, values when available
+  - Each row is a link to `/course/<id>/<instructor_id>/`
+
+### Club Detail Page (`/course/<category_slug>/<club_id>?mode=clubs`)
+- **Breadcrumb:** Clubs / Category Name / Club Name
+- **Header:** Club name (large) + category name (smaller, right)
+- **Description card:** White card with left orange border, "Club Description" heading, body text, photo (right), badge ("No Application Required" green or "Application Required")
+- **Reviews tab:** "Reviews" tab header, review count + "Add your review!" button (orange)
+- **Empty state:** Light blue banner — "No reviews yet. Be the first to write a review!"
+
+### Common UI Patterns Across Both
+- Gray page background (`#f0f1f3`)
+- White cards with subtle borders
+- Left orange accent border on description cards
+- Blue (`#4a6fa5`) for name blocks and headers
+- Orange (`#d75626`) for CTAs, active pills, toggles
+- Breadcrumb: light gray background, `/` separator, last item muted
+- Stats use uppercase small labels (RATING, DIFFICULTY, etc.)
+- Em-dash (`—`) for missing data
+
+### Lab Detail Page (Planned — mirrors both patterns)
+- **Breadcrumb:** Labs / School / Department / PI Name
+- **Header:** PI name (large) + department (smaller)
+- **Description card:** "Research Description" heading, body text, PI photo (right), badges ("Currently Recruiting" green, research area tags)
+- **Info card:** Contact info (email, phone, office), education, external links (Google Scholar, GitHub, website)
+- **Stats row:** MENTORSHIP, CULTURE, HOURS/WK, POSITIONS, RECRUITING (mirrors course instructor row pattern)
+- **Reviews tab:** Same pattern as clubs — count + "Add your review!" + empty state
+- **Q&A tab:** Placeholder (same as clubs)
+
 ## Open Questions
 
 1. Do we have lab data to load, or build with mock data first?
