@@ -1,12 +1,25 @@
 """New review page (GET context + POST create)."""
 
+from django import forms as django_forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from ...models import Club, Course, Instructor, Semester
+from ...models import Club, Course, Instructor, Lab, LabReview, Semester
 from ...review.forms import ReviewForm
+
+
+class LabReviewForm(django_forms.ModelForm):
+    """Form for lab review creation."""
+
+    class Meta:
+        model = LabReview
+        fields = [
+            "lab", "overall", "mentorship", "work_life", "friendliness",
+            "inclusivity", "responsiveness", "hours_per_week", "role",
+            "period", "how_joined", "advice", "would_recommend", "text",
+        ]
 from ...review.services import (
     club_semester_choices_payload,
     instructors_for_course_semester,
@@ -18,8 +31,22 @@ from ...utils import parse_mode, recent_semesters, semesters_for_course, with_mo
 def new_review(request):
     """Review creation view with context-required logic."""
     mode, is_club = parse_mode(request)
+    is_lab = mode == "labs"
 
     if request.method == "POST":
+        if is_lab:
+            form = LabReviewForm(request.POST)
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.user = request.user
+                instance.save()
+                messages.success(request, f"Successfully reviewed {instance.lab.pi_name}'s lab!")
+                return redirect("reviews")
+            lab = form.cleaned_data.get("lab") if form.cleaned_data else None
+            return render(request, "reviews/new_lab_review.html", {
+                "form": form, "lab": lab, "mode": "labs", "is_lab": True,
+            })
+
         form = ReviewForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
@@ -48,6 +75,8 @@ def new_review(request):
 
         return _render_review_form_with_errors(request, form, is_club, mode)
 
+    if is_lab:
+        return _handle_lab_review_get(request, mode)
     if is_club:
         return _handle_club_review_get(request, mode)
     return _handle_course_review_get(request, mode)
@@ -143,6 +172,20 @@ def _handle_club_review_get(request, mode):
             "club_semester_choices": club_semester_choices_payload(),
             "review_main_unlocked": True,
         },
+    )
+
+
+def _handle_lab_review_get(request, mode):
+    """Handle GET for lab reviews — require lab context."""
+    lab_id = request.GET.get("lab")
+    if not lab_id:
+        messages.info(request, "Please select a lab to review.")
+        return redirect("/browse?mode=labs")
+    lab = get_object_or_404(Lab, id=lab_id)
+    return render(
+        request,
+        "reviews/new_lab_review.html",
+        {"is_lab": True, "mode": mode, "lab": lab},
     )
 
 

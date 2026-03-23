@@ -134,6 +134,23 @@ class ClubCategoryAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
+class LabAdmin(admin.ModelAdmin):
+    list_display = ["pi_name", "department", "is_recruiting"]
+    ordering = ["pi_name"]
+    search_fields = ["pi_name", "research_areas"]
+    list_filter = ["department", "is_recruiting"]
+
+
+class LabReviewAdmin(admin.ModelAdmin):
+    list_display = ["lab", "user", "overall", "created"]
+    search_fields = ["lab__pi_name", "text"]
+    list_filter = ["role", "would_recommend"]
+
+
+class LabVoteAdmin(admin.ModelAdmin):
+    list_display = ["review", "user", "value"]
+
+
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Instructor, InstructorAdmin)
 admin.site.register(Discipline, DisciplineAdmin)
@@ -148,3 +165,6 @@ admin.site.register(SectionTime, SectionTimeAdmin)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(ClubCategory, ClubCategoryAdmin)
 admin.site.register(ReviewLLMSummary)
+admin.site.register(Lab, LabAdmin)
+admin.site.register(LabReview, LabReviewAdmin)
+admin.site.register(LabVote, LabVoteAdmin)

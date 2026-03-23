@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from ...forms import AdvancedSearchForm, ClubAdvancedSearchForm
-from ...models import Club, ClubCategory, School
+from ...models import Club, ClubCategory, Department, Lab, School
 from ...search.browse_helpers import (
     advanced_search_results_payload,
     club_advanced_search_results_payload,
@@ -128,9 +128,47 @@ def _browse_courses(request, mode: str):
     )
 
 
+def _browse_labs(request, mode: str):
+    """Labs browse: schools/departments grid."""
+    schools = (
+        School.objects.filter(department__lab__isnull=False)
+        .distinct()
+        .prefetch_related(
+            Prefetch(
+                "department_set",
+                queryset=Department.objects.filter(lab__isnull=False)
+                .distinct()
+                .prefetch_related(
+                    Prefetch(
+                        "lab_set",
+                        queryset=Lab.objects.order_by("pi_name"),
+                        to_attr="labs",
+                    )
+                )
+                .order_by("name"),
+                to_attr="departments_with_labs",
+            )
+        )
+        .order_by("name")
+    )
+    return render(
+        request,
+        "site/catalog/browse.html",
+        {
+            "is_club": False,
+            "is_lab": True,
+            "mode": mode,
+            "lab_schools": schools,
+        },
+    )
+
+
 def browse(request):
     """View for browse page with advanced course or club search."""
     mode, is_club = parse_mode(request)
+    is_lab = mode == "labs"
     if is_club:
         return _browse_clubs(request, mode)
+    if is_lab:
+        return _browse_labs(request, mode)
     return _browse_courses(request, mode)

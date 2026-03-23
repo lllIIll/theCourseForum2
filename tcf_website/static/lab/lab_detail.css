@@ -1,0 +1,16 @@
+.lab-detail .card-title {
+    color: #333;
+}
+
+.lab-detail .badge-secondary {
+    background-color: #6c757d;
+    font-weight: normal;
+}
+
+.lab-detail .text-primary {
+    color: #d75626 !important;
+}
+
+.lab-review-card {
+    border-left: 3px solid #d75626;
+}

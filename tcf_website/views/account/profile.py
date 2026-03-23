@@ -14,7 +14,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from ...models import Review, User
+from ...models import LabReview, Review, User
 from ...pagination import paginate
 from ...utils import safe_next_url, safe_round
 
@@ -67,9 +67,11 @@ def reviews(request):
     """User reviews view."""
     page_number = request.GET.get("page", 1)
     paginated_reviews = paginate(request.user.reviews(), page_number)
+    lab_reviews = LabReview.objects.filter(user=request.user).order_by("-created")
 
     context = _review_stats_for_user(request.user)
     context["paginated_reviews"] = paginated_reviews
+    context["lab_reviews"] = lab_reviews
     return render(request, "site/account/reviews.html", context=context)
 
 

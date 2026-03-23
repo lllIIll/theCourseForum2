@@ -12,7 +12,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from ...models import Club, Instructor
+from ...models import Club, Instructor, Lab
 from ...pagination import paginate
 from ...search.course_display import (
     course_to_row_dict,
@@ -88,6 +88,39 @@ def fetch_instructors(query: str) -> list[dict]:
     )
     keys = ("first_name", "last_name", "email", "id", "max_similarity")
     return [{key: getattr(instructor, key) for key in keys} for instructor in results]
+
+
+def fetch_labs(query: str) -> list[dict]:
+    """Lab dicts ordered by trigram similarity; empty query returns all labs."""
+    if not query:
+        return list(
+            Lab.objects.select_related("department")
+            .annotate(
+                max_similarity=Value(1.0, output_field=FloatField()),
+                department_name=F("department__name"),
+            )
+            .values("id", "pi_name", "slug", "research_areas", "is_recruiting", "max_similarity", "department_name")
+        )
+    return list(
+        Lab.objects.select_related("department")
+        .annotate(sim=TrigramSimilarity("combined_search_text", query))
+        .annotate(max_similarity=F("sim"))
+        .filter(max_similarity__gte=_SIMILARITY_THRESHOLD)
+        .annotate(department_name=F("department__name"))
+        .order_by("-max_similarity")
+        .values("id", "pi_name", "slug", "research_areas", "is_recruiting", "max_similarity", "department_name")
+    )
+
+
+def group_by_department(labs: list[dict]) -> dict:
+    """Group lab dicts by department name."""
+    grouped: dict = {}
+    for lab in labs:
+        dept = lab["department_name"]
+        if dept not in grouped:
+            grouped[dept] = {"department_name": dept, "labs": []}
+        grouped[dept]["labs"].append(lab)
+    return grouped
 
 
 def fetch_clubs(query: str) -> list[dict]:
@@ -186,10 +219,31 @@ def search(request):
     """Search results view (full page and XHR autocomplete)."""
     query = request.GET.get("q", "").strip()
     mode, is_club = parse_mode(request)
+    is_lab = mode == "labs"
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
     courses_first = True
     instructors: list[dict] = []
+
+    if is_lab:
+        page_obj = paginate(fetch_labs(query), request.GET.get("page", 1))
+        total = page_obj.paginator.count
+        grouped = group_by_department(list(page_obj))
+        return render(
+            request,
+            _SEARCH_RESULTS_TEMPLATE,
+            {
+                "mode": mode,
+                "is_club": False,
+                "is_lab": True,
+                "query": _truncate_query_display(query),
+                "grouped": grouped,
+                "instructors": [],
+                "total": total,
+                "page_obj": page_obj,
+                "courses_first": False,
+            },
+        )
 
     if is_club:
         if is_ajax:
@@ -241,6 +295,7 @@ def search(request):
         {
             "mode": mode,
             "is_club": is_club,
+            "is_lab": False,
             "query": _truncate_query_display(query),
             "courses_first": courses_first,
             "grouped": grouped,

@@ -23,6 +23,8 @@ Search | theCourseForum
       Showing matches for <span class="search-results-header__query">"{{ query }}"</span>
       {% elif is_club %}
       Browse clubs by category.
+      {% elif is_lab %}
+      Browse research labs.
       {% endif %}
     </p>
   </div>
@@ -41,6 +43,19 @@ Search | theCourseForum
       aria-selected="true"
     >
       Clubs
+      <span class="search-tab__count">{{ total }}</span>
+    </button>
+    {% elif is_lab %}
+    <button
+      type="button"
+      class="search-tab is-active"
+      id="search-tab-trigger-labs"
+      data-tab-target="labs"
+      role="tab"
+      aria-controls="search-tab-labs"
+      aria-selected="true"
+    >
+      Labs
       <span class="search-tab__count">{{ total }}</span>
     </button>
     {% else %}
@@ -97,6 +112,35 @@ Search | theCourseForum
     </div>
 
     {% include "site/catalog/partials/_club_grouped_results.html" with empty_hint="Try a broader keyword." %}
+  </section>
+  {% elif is_lab %}
+  <section
+    class="search-panel is-active"
+    id="search-tab-labs"
+    data-tab-panel="labs"
+    role="tabpanel"
+    aria-labelledby="search-tab-trigger-labs"
+  >
+    <div class="search-panel__header">
+      <h2 class="search-panel__title">Labs</h2>
+      <p class="search-panel__count">{{ total }} result{{ total|pluralize }}</p>
+    </div>
+    {% if grouped %}
+      {% for dept_name, dept_data in grouped.items %}
+      <div class="mb-4">
+        <h3 class="search-panel__dept-title">{{ dept_data.department_name }}</h3>
+        {% for lab in dept_data.labs %}
+        <div class="list-group-item">
+          <a href="/lab/{{ lab.slug }}/">{{ lab.pi_name }}</a>
+          {% if lab.is_recruiting %}<span class="badge badge-success ml-1">Recruiting</span>{% endif %}
+          {% if lab.research_areas %}<small class="text-muted ml-2">{{ lab.research_areas|truncatewords:10 }}</small>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="search-panel__empty">No labs found. Try a different search term.</p>
+    {% endif %}
   </section>
   {% else %}
   <section

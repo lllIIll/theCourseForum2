@@ -26,6 +26,8 @@
             {% else %}
             Explore student organizations by category.
             {% endif %}
+          {% elif is_lab %}
+          Browse research labs by department.
           {% elif has_search %}
           {{ total }} course{{ total|pluralize }} found.
           {% else %}
@@ -61,6 +63,32 @@
   </div>
   </div>
   {% endif %}
+
+  {% elif is_lab %}
+  <div id="browse-default-catalog">
+  <hr class="browse-separator">
+  {% for school in lab_schools %}
+  <div class="school-section">
+    <div class="school-header">
+      <h2 class="school-header__title">{{ school.name }}</h2>
+    </div>
+    <div class="departments-grid">
+      {% for dept in school.departments_with_labs %}
+      <div class="department-card">
+        <h3 class="department-card__title">{{ dept.name }}</h3>
+        <ul class="department-card__courses">
+          {% for lab in dept.labs %}
+          <li><a href="/lab/{{ lab.slug }}/">{{ lab.pi_name }}{% if lab.is_recruiting %} <span class="badge badge-success ml-1">Recruiting</span>{% endif %}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-muted mt-4">No labs found.</p>
+  {% endfor %}
+  </div>
 
   {% else %}
   {% include "site/catalog/components/_advanced_search_form.html" %}
