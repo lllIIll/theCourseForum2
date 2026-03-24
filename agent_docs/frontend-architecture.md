@@ -29,9 +29,10 @@ base/index.html          ← HTML boilerplate, CDN links, GA/GTM
 | `department/` | 2 | Department course listing, course card |
 | `course/` | 2 | Course page, course+instructor detail |
 | `instructor/` | 1 | Instructor profile page |
-| `club/` | 3 | Club detail, category browse, mode toggle |
+| `club/` | 3 | Club detail, category browse, mode toggle (3-way: Courses/Clubs/Labs) |
+| `lab/` | 3 | Lab detail, lab review card, lab browse school accordion |
 | `search/` | 2 | Search results, searchbar component |
-| `reviews/` | 7 | Review form, review card, stats, modals |
+| `reviews/` | 8 | Review form, review card, stats, modals, lab review form |
 | `schedule/` | 10 | Schedule builder, editor, modals |
 | `qa/` | 3 | Q&A section, delete modals |
 | `profile/` | 2 | User profile, delete modal |
@@ -41,10 +42,10 @@ base/index.html          ← HTML boilerplate, CDN links, GA/GTM
 
 ## Static Files
 
-### CSS (~24 files, ~2,600 lines)
-Organized by feature: `base/`, `browse/`, `club/`, `course/`, `department/`, `instructor/`, `landing/`, `profile/`, `qa/`, `reviews/`, `schedule/`, `search/`, `common/`, `about/`, `icons/`, `login/`
+### CSS (~25 files, ~2,650 lines)
+Organized by feature: `base/`, `browse/`, `club/`, `course/`, `department/`, `instructor/`, `lab/`, `landing/`, `profile/`, `qa/`, `reviews/`, `schedule/`, `search/`, `common/`, `about/`, `icons/`, `login/`
 
-### JS (~13 files, ~1,200 lines)
+### JS (~14 files, ~1,260 lines)
 Key files:
 - `search/filters.js` — advanced search with localStorage
 - `reviews/review.js` — upvote/downvote AJAX
@@ -52,19 +53,21 @@ Key files:
 - `qa/qa.js` — Q&A interactions
 - `schedule/parse_time.js` — schedule time parsing
 - `common/recently_viewed.js` — localStorage recently viewed
-- `club/mode_toggle.js` — courses/clubs toggle
+- `club/mode_toggle.js` — courses/clubs/labs 3-way toggle
+- `lab/lab_review.js` — lab review upvote/downvote AJAX
 
 ## URL Structure (126 routes)
 
 | Pattern | View | Page |
 |---------|------|------|
 | `/` | `index` | Landing page |
-| `/browse/` | `browse` | Browse courses/clubs |
+| `/browse/` | `browse` | Browse courses/clubs/labs |
 | `/department/<id>/` | `department` | Department course listing |
 | `/course/<mnemonic>/<number>/` | `course_view` | Course detail |
 | `/course/<course_id>/<instructor_id>/` | `course_instructor` | Instructor detail |
 | `/instructor/<id>/` | `instructor_view` | Instructor profile |
 | `/club-category/<slug>/` | `club_category` | Club category |
+| `/lab/<slug>/` | `lab_detail` | Lab detail page |
 | `/search/` | `search` | Search results |
 | `/reviews/new/` | `new_review` | Write review |
 | `/reviews/` | `reviews` | My reviews |
@@ -106,7 +109,7 @@ Key files:
 - **Breadcrumbs:** Gray card, `/` separator, last segment muted
 - **Description cards:** White card, left orange border (4px), heading + body text
 - **Stat columns:** Uppercase small labels (RATING, DIFFICULTY, etc.), em-dash for missing data
-- **Mode toggle:** Sliding pill with orange indicator, `?mode=` query param
+- **Mode toggle:** 3-way sliding pill (Courses/Clubs/Labs) with orange indicator, `?mode=` query param
 - **Pagination:** Django Paginator, rendered via `common/pagination.html`
 - **AJAX voting:** POST to upvote/downvote endpoints, update DOM in place
 - **Recently viewed:** localStorage, rendered in history modal

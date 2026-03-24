@@ -26,6 +26,9 @@ Extension: `pg_trgm` (trigram fuzzy search)
 | courseinstructorgrade | 37,670 |
 | club | 1,156 |
 | clubcategory | 9 |
+| lab | 284 |
+| labreview | 0 |
+| labvote | 0 |
 | discipline | 11 |
 | savedcourse | 0 |
 | blogpost | 0 |
@@ -270,6 +273,65 @@ Reviews can link to a club via `review.club_id`.
 
 ---
 
+## Labs
+
+### lab
+| Column | Type | Notes |
+|--------|------|-------|
+| id | serial PK | |
+| pi_name | varchar(255) | PI full name |
+| slug | varchar(255) | unique, auto-generated from pi_name |
+| department_id | FK → department | |
+| title | varchar(255) | e.g. "Professor", "Associate Professor" |
+| description | text | research bio |
+| research_areas | text | comma-separated interests |
+| website | varchar(200) | optional |
+| email | varchar(254) | optional |
+| phone | varchar(50) | optional |
+| office | varchar(255) | optional |
+| photo_url | varchar(512) | optional |
+| profile_url | varchar(200) | optional |
+| google_scholar | varchar(200) | optional |
+| github_url | varchar(200) | optional |
+| education | text | optional |
+| is_recruiting | boolean | default false |
+| combined_search_text | varchar(1024) | GIN trigram index, auto-populated |
+
+### labreview
+| Column | Type | Notes |
+|--------|------|-------|
+| id | serial PK | |
+| lab_id | FK → lab | |
+| user_id | FK → user | |
+| overall | smallint | 1-5 rating |
+| mentorship | smallint | 1-5 rating |
+| work_life | smallint | 1-5 rating |
+| friendliness | smallint | 1-5 rating |
+| inclusivity | smallint | 1-5 rating |
+| responsiveness | smallint | 1-5 rating |
+| hours_per_week | smallint | 0-80 |
+| role | varchar(20) | undergrad_ra, grad_ra, postdoc, staff, other |
+| period | varchar(100) | e.g. "Fall 2024 - Spring 2025" |
+| how_joined | text | optional |
+| advice | text | optional |
+| would_recommend | boolean | default true |
+| text | text | review body, optional |
+| hidden | boolean | moderation flag |
+| toxicity_rating | int | |
+| toxicity_category | varchar | |
+| created | timestamptz | |
+| modified | timestamptz | |
+
+### labvote
+| Column | Type | Notes |
+|--------|------|-------|
+| id | serial PK | |
+| value | int | -1 or 1 |
+| user_id | FK → user | unique with review_id |
+| review_id | FK → labreview | |
+
+---
+
 ## Other Tables
 
 ### discipline
@@ -294,9 +356,10 @@ Python Social Auth tables (association, code, nonce, partial, usersocialauth). H
 
 ## Key Indexes
 
-- **Trigram (GIN)**: `course.title`, `course.combined_mnemonic_number`, `instructor.first_name`, `instructor.last_name`, `instructor.full_name`, `club.combined_name` — powers fuzzy search
+- **Trigram (GIN)**: `course.title`, `course.combined_mnemonic_number`, `instructor.first_name`, `instructor.last_name`, `instructor.full_name`, `club.combined_name`, `lab.combined_search_text` — powers fuzzy search
 - **Composite**: `(course_id, instructor_id)` on review and courseinstructorgrade — fast lookups
 - **Semester**: `(semester_id, course_id)` on section — fast per-semester queries
+- **Lab**: `(lab_id)` on labreview, `(user_id, -created)` on labreview, `(review_id)` on labvote
 
 ## Django App
 

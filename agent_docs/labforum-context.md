@@ -49,10 +49,21 @@ This means LabForum shares infrastructure, auth (UVA SSO via Python Social Auth)
 - "Currently Recruiting" badge is a key differentiator
 - Future expansion: Data Science, Physics, Arts & Sciences, Medicine
 
-## What Needs Building
+## What Has Been Built
 
-- Django models for labs, lab reviews, lab Q&A
-- Views and templates for browsing labs, lab detail pages
-- Review submission (auth-gated)
-- Lab data ingestion (scraper or management command)
-- Search/filter for labs
+- **Models:** `Lab`, `LabReview`, `LabVote` in `tcf_website/models/models.py`
+- **Migration:** `0024_lab_labreview_labvote.py`
+- **Data loading:** `load_labs` management command (284 SEAS faculty imported from JSON)
+- **Browse:** 3-way mode toggle (Courses/Clubs/Labs), lab browse page grouped by school/department
+- **Detail page:** `/lab/<slug>/` with PI info card, stats grid, paginated reviews, voting
+- **Review form:** `/reviews/new/?mode=labs&lab=<id>` with 6 rating dimensions, role, period, advice
+- **Search:** Trigram search on `combined_search_text`, results grouped by department
+- **Profile:** User's lab reviews shown in separate section on profile page
+- **Tests:** 20 tests covering models and views
+
+## What Is Not Yet Built
+
+- Q&A system for labs
+- Non-SEAS lab data (Data Science, Physics, Medicine)
+- Dark mode support
+- Supabase migration (lab data currently loaded from JSON)

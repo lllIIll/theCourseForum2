@@ -32,45 +32,41 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 - `browse_category.html`: same pattern → `<ul>` of club links
 - Both use Bootstrap collapse with `data-toggle="collapse"`
 
-## What Needs to Change
+## What Was Changed (Implemented)
 
 ### 1. Mode Toggle (`templates/club/mode_toggle.html`)
-- Add "Labs" as third option in both link and radio variants
-- Link: `<a href="?mode=labs">Labs</a>`
-- Radio: add `#search-mode-labs` input + label
+- 3-way toggle with Courses / Clubs / Labs in both link and radio variants
+- Radio: `#search-mode-labs` input + label added
 
 ### 2. Mode Toggle CSS (`static/club/mode_toggle.css`)
-- Adjust slider width from `50%` to `33.33%` for 3 options
-- Add `slide-middle` and `slide-right` positions (currently only `slide-right`)
-- Radio variant: adjust `.toggle-indicator` width and transform positions
-- Add CSS rules for `#search-mode-labs:checked` states
+- Slider/indicator width: `calc((100% - 8px) / 3)` for link, `calc((100% - 4px) / 3)` for radio
+- `slide-middle` (clubs) and `slide-right` (labs) transform positions
+- Container max-width: `350px`, radio min-width: `250px`
 
-### 3. `parse_mode()` in `views/browse.py`
-- Handle `mode=labs` → return `(mode, is_club, is_lab)` or use a mode string
-- Update all callers that destructure the tuple
+### 3. `parse_mode()` in 3 files
+- Returns `(mode, is_club, is_lab)` 3-tuple in `views/browse.py`, `views/review.py`, `views/search.py`
+- All callers updated to destructure the third value
 
-### 4. `browse()` view in `views/browse.py`
-- Add `elif mode == "labs":` branch
-- Load lab data grouped by school/department (or custom grouping)
-- Pass to template
+### 4. Browse view (`views/browse.py`)
+- `elif is_lab:` branch queries Schools with Departments that have Labs via `prefetch_related`
+- Dynamic filter (`.filter(lab__isnull=False)`) — future-proofs for non-SEAS expansion
 
-### 5. Browse Template (`templates/browse/browse.html`)
-- Add `{% elif is_lab %}` block
-- Render labs accordion (school → department → lab/PI list)
-- Title changes to "Browse by Department" or "Browse Labs"
+### 5. Browse template (`templates/browse/browse.html`)
+- `{% elif is_lab %}` block renders lab schools accordion
+- Title: "Browse by Department" in lab mode
 
-### 6. New Template: `templates/labs/browse_labs.html` (or similar)
-- Accordion card for each school/department group
-- List of labs/PIs with links to lab detail pages
+### 6. Lab browse template (`templates/lab/browse_school.html`)
+- School accordion → Department groups → PI name list with recruiting badges
+- Links to `/lab/<slug>/`
 
-### 7. Django Models (new)
-- `Lab` model (or `ResearchGroup`) — PI name, department, research areas, etc.
-- FK to existing `Department` or new lab-specific department grouping
-- Migration to create table
+### 7. Django Models
+- `Lab` — FK to Department, slug auto-generated from pi_name, GIN index on combined_search_text
+- `LabReview` — 6 rating dimensions, role, period, advice, with sort/paginate/vote methods
+- `LabVote` — same pattern as Vote, unique constraint on (user, review)
 
-### 8. Lab Data Loading
-- Management command or scraper to populate lab data
-- 352 SEAS faculty from scraper (see LABFORUM_CONTEXT.md)
+### 8. Lab Data Loading (`management/commands/load_labs.py`)
+- Reads `lab_data/labs.json`, maps department strings via `DEPARTMENT_MAP`
+- 284 SEAS faculty imported (68 skipped — no department match)
 
 ## Existing Detail Page Patterns (Reference)
 
@@ -103,18 +99,27 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 - Stats use uppercase small labels (RATING, DIFFICULTY, etc.)
 - Em-dash (`—`) for missing data
 
-### Lab Detail Page (Planned — mirrors both patterns)
+### Lab Detail Page (Implemented — `/lab/<slug>/`)
 - **Breadcrumb:** Labs / School / Department / PI Name
-- **Header:** PI name (large) + department (smaller)
-- **Description card:** "Research Description" heading, body text, PI photo (right), badges ("Currently Recruiting" green, research area tags)
-- **Info card:** Contact info (email, phone, office), education, external links (Google Scholar, GitHub, website)
-- **Stats row:** MENTORSHIP, CULTURE, HOURS/WK, POSITIONS, RECRUITING (mirrors course instructor row pattern)
-- **Reviews tab:** Same pattern as clubs — count + "Add your review!" + empty state
-- **Q&A tab:** Placeholder (same as clubs)
+- **Header:** PI name (h1) + department + title, recruiting badge
+- **Info card:** Research description (left), photo + contact links (right), research area tags
+- **Stats grid:** 8 cards — OVERALL, MENTORSHIP, CULTURE, WORK-LIFE, INCLUSIVITY, RESPONSIVENESS, HRS/WK, % RECOMMEND
+- **Reviews tab:** Count + "Add your review!" button, sort dropdown, paginated review cards
+- **Review cards:** Role/period header, 6 rating badges, text, advice, upvote/downvote buttons
 
-## Open Questions
+### Lab Review Form (Implemented — `/reviews/new/?mode=labs&lab=<id>`)
+- Role dropdown, period input, 6 rating selects, hours/week, would-recommend toggle
+- Review text (100+ words), how joined, advice for future students
 
-1. Do we have lab data to load, or build with mock data first?
-2. Should labs link to a new lab detail page (`/lab/<slug>/`) or reuse course pattern?
-3. Does the searchbar also need to search labs (radio toggle in navbar)?
-4. Should the sidebar nav get a "Labs" entry, or is the browse toggle enough?
+### Additional Lab Routes
+- `/lab/<slug>/` → `lab_detail` view
+- `/lab-reviews/<id>/upvote/` → `lab_upvote` view
+- `/lab-reviews/<id>/downvote/` → `lab_downvote` view
+- Search: `/search/?mode=labs&q=<query>` — trigram search on combined_search_text
+
+## Resolved Decisions
+
+1. **Lab data:** 352 SEAS faculty scraped, 284 imported via `load_labs` management command
+2. **URLs:** Dedicated `/lab/<slug>/` pages (not reusing course pattern)
+3. **Search:** Searchbar radio toggle includes labs; trigram search on PI name + research areas + department
+4. **Navigation:** Browse toggle is the primary entry point (no sidebar entry)
