@@ -1,0 +1,21 @@
+/* Email builder inline section */
+.email-builder {
+    border: 2px solid #d75626;
+}
+
+.email-builder-context {
+    background-color: #f8f9fa;
+    border-left: 3px solid #d75626;
+    padding: 12px;
+    border-radius: 0 4px 4px 0;
+}
+
+.eb-preview-val {
+    color: #d75626;
+    font-style: italic;
+}
+
+#eb-copy-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

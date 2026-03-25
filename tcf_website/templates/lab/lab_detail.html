@@ -5,6 +5,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'lab/lab_detail.css' %}" />
+<link rel="stylesheet" href="{% static 'lab/email_builder.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -55,10 +56,6 @@
         </div>
 
         <div class="text-center mt-3 mt-md-0" style="min-width: 220px;">
-          {% if lab.photo_url %}
-          <img src="{{ lab.photo_url }}" alt="{{ lab.pi_name }}" class="img-fluid rounded mb-3" style="max-height: 200px;">
-          {% endif %}
-
           <div class="text-left">
             {% if lab.email %}
             <div class="mb-1"><i class="fas fa-envelope mr-2"></i><a href="mailto:{{ lab.email }}">{{ lab.email }}</a></div>
@@ -159,6 +156,17 @@
   </div>
   {% endif %}
 
+  <!-- Email Builder -->
+  {% if lab.email %}
+  <button class="btn btn-lg mb-4" id="eb-toggle-btn" style="background-color: #d75626; color: #fff;"
+          onclick="document.getElementById('email-builder-wrapper').style.display='block'; this.style.display='none';">
+    <i class="fas fa-envelope mr-2"></i>Draft an Email to This PI
+  </button>
+  <div id="email-builder-wrapper" style="display: none;">
+    {% include "lab/email_builder.html" %}
+  </div>
+  {% endif %}
+
   <!-- Reviews Section -->
   <ul class="nav nav-tabs" id="reviews">
     <li class="nav-item">
@@ -218,4 +226,5 @@
 
 {% block js %}
 <script src="{% static 'lab/lab_review.js' %}"></script>
+<script src="{% static 'lab/email_builder.js' %}"></script>
 {% endblock %}
