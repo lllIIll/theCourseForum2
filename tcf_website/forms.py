@@ -2,7 +2,7 @@
 
 from django import forms
 
-from .models import ClubCategory, Discipline, School, Semester, Subdepartment
+from .models import ClubCategory, Department, Discipline, School, Semester, Subdepartment
 from .utils import recent_semesters
 
 
@@ -121,5 +121,35 @@ class ClubAdvancedSearchForm(forms.Form):
         if (data.get("club_name") or "").strip():
             return True
         if data.get("no_application_required"):
+            return True
+        return False
+
+
+class LabSearchForm(forms.Form):
+    """Lab browse filters (name/PI search, department, recruiting)."""
+
+    q = forms.CharField(required=False, label="Lab name or PI")
+    department = forms.ChoiceField(required=False, label="Department")
+    recruiting = forms.BooleanField(required=False, label="Recruiting only")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["department"].choices = [("", "Any")] + [
+            (str(d.pk), d.name)
+            for d in Department.objects.filter(lab__isnull=False)
+            .distinct()
+            .order_by("name")
+        ]
+
+    def has_search_params(self):
+        """Return True if any filter is active."""
+        if not self.is_valid():
+            return False
+        data = self.cleaned_data
+        if (data.get("q") or "").strip():
+            return True
+        if data.get("department"):
+            return True
+        if data.get("recruiting"):
             return True
         return False

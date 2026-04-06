@@ -1,0 +1,295 @@
+{% extends "site/common/base.html" %}
+{% load static %}
+
+{% block title %}Review {{ lab.pi_name }}'s Lab | theCourseForum{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/site/pages/review.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="review-container">
+
+  <header class="review-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="justify-content: center; margin-bottom: var(--space-3);">
+      <a href="/browse?mode=labs" class="breadcrumb__link">Labs</a>
+      <span class="breadcrumb__separator">/</span>
+      <a href="{% url 'lab_detail' slug=lab.slug %}" class="breadcrumb__link">{{ lab.pi_name }}</a>
+      <span class="breadcrumb__separator">/</span>
+      <span class="breadcrumb__current">Write Review</span>
+    </nav>
+    <h1 class="review-header__title">Review {{ lab.pi_name }}'s Lab</h1>
+  </header>
+
+  {% if form and form.errors %}
+  <div class="review-section" style="border-color: var(--danger);">
+    <p style="color: var(--danger); font-weight: var(--font-semibold); margin-bottom: var(--space-2);">Please fix the errors below before submitting.</p>
+    <ul style="margin: 0; padding-left: var(--space-5); color: var(--danger); font-size: var(--text-sm);">
+      {% for field in form %}
+        {% for error in field.errors %}
+        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form id="labReviewForm" action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="lab" value="{{ lab.id }}">
+
+    {# ===== Section 1: Your Role ===== #}
+    <section class="review-section">
+      <h2 class="review-section__title">Your Role</h2>
+
+      <div class="rating-grid">
+        <div class="rating-field">
+          <label class="rating-field__label" for="id_role">Role <span style="color: var(--danger);">*</span></label>
+          <select class="instructor-select" id="id_role" name="role" required>
+            <option value="" disabled {% if not form.role.value %}selected{% endif %}>Select your role…</option>
+            <option value="undergrad_ra" {% if form.role.value == "undergrad_ra" %}selected{% endif %}>Undergraduate RA</option>
+            <option value="grad_ra" {% if form.role.value == "grad_ra" %}selected{% endif %}>Graduate RA</option>
+            <option value="postdoc" {% if form.role.value == "postdoc" %}selected{% endif %}>Postdoc</option>
+            <option value="staff" {% if form.role.value == "staff" %}selected{% endif %}>Staff</option>
+            <option value="other" {% if form.role.value == "other" %}selected{% endif %}>Other</option>
+          </select>
+          {% if form.role.errors %}<span class="review-field-error">{{ form.role.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label" for="id_period">Period <span style="color: var(--danger);">*</span></label>
+          <input
+            class="workload-input"
+            type="text"
+            id="id_period"
+            name="period"
+            placeholder="e.g. Fall 2024 – Spring 2025"
+            value="{{ form.period.value|default:'' }}"
+            required>
+          {% if form.period.errors %}<span class="review-field-error">{{ form.period.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label" for="id_hours_per_week">Hours per Week <span style="color: var(--danger);">*</span></label>
+          <div class="workload-input-wrapper">
+            <input
+              class="workload-input"
+              type="number"
+              id="id_hours_per_week"
+              name="hours_per_week"
+              min="0"
+              max="80"
+              value="{{ form.hours_per_week.value|default:'10' }}"
+              required>
+            <span class="workload-suffix">hrs</span>
+          </div>
+          {% if form.hours_per_week.errors %}<span class="review-field-error">{{ form.hours_per_week.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+    </section>
+
+    {# ===== Section 2: Ratings ===== #}
+    <section class="review-section">
+      <h2 class="review-section__title">Ratings</h2>
+      <div class="rating-grid">
+
+        <div class="rating-field">
+          <label class="rating-field__label">Overall <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="overall" value="{{ i }}"
+                {% if form.overall.value == i %}checked
+                {% elif not form.overall.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.overall.errors %}<span class="review-field-error">{{ form.overall.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Mentorship <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="mentorship" value="{{ i }}"
+                {% if form.mentorship.value == i %}checked
+                {% elif not form.mentorship.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.mentorship.errors %}<span class="review-field-error">{{ form.mentorship.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Work-Life Balance <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="work_life" value="{{ i }}"
+                {% if form.work_life.value == i %}checked
+                {% elif not form.work_life.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.work_life.errors %}<span class="review-field-error">{{ form.work_life.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Lab Culture <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="friendliness" value="{{ i }}"
+                {% if form.friendliness.value == i %}checked
+                {% elif not form.friendliness.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.friendliness.errors %}<span class="review-field-error">{{ form.friendliness.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Inclusivity <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="inclusivity" value="{{ i }}"
+                {% if form.inclusivity.value == i %}checked
+                {% elif not form.inclusivity.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.inclusivity.errors %}<span class="review-field-error">{{ form.inclusivity.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Advisor Responsiveness <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="responsiveness" value="{{ i }}"
+                {% if form.responsiveness.value == i %}checked
+                {% elif not form.responsiveness.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.responsiveness.errors %}<span class="review-field-error">{{ form.responsiveness.errors|join:", " }}</span>{% endif %}
+        </div>
+
+      </div>
+    </section>
+
+    {# ===== Section 3: Would You Recommend? ===== #}
+    <section class="review-section">
+      <h2 class="review-section__title">Would you recommend this lab?</h2>
+      <div class="recommend-toggle" style="display: flex; gap: var(--space-3);">
+        <label class="btn {% if form.would_recommend.value == 'True' %}btn--accent{% else %}btn--secondary{% endif %}"
+               style="cursor: pointer; user-select: none;">
+          <input type="radio" name="would_recommend" value="True" hidden
+            {% if form.would_recommend.value == 'True' %}checked{% endif %}> Yes
+        </label>
+        <label class="btn {% if form.would_recommend.value != 'True' %}btn--accent{% else %}btn--secondary{% endif %}"
+               style="cursor: pointer; user-select: none;">
+          <input type="radio" name="would_recommend" value="False" hidden
+            {% if form.would_recommend.value == 'False' %}checked{% endif %}> No
+        </label>
+      </div>
+      {% if form.would_recommend.errors %}<span class="review-field-error">{{ form.would_recommend.errors|join:", " }}</span>{% endif %}
+    </section>
+
+    {# ===== Section 4: Your Review ===== #}
+    <section class="review-section">
+      <h2 class="review-section__title">Your Review</h2>
+
+      <div class="rating-field" style="margin-bottom: var(--space-5);">
+        <label class="rating-field__label" for="id_text">Review (optional)</label>
+        <textarea
+          class="review-textarea"
+          id="id_text"
+          name="text"
+          rows="6"
+          placeholder="Share your experience working in this lab…"
+          maxlength="5000">{{ form.text.value|default:'' }}</textarea>
+        {% if form.text.errors %}<span class="review-field-error">{{ form.text.errors|join:", " }}</span>{% endif %}
+      </div>
+
+      <div class="rating-field" style="margin-bottom: var(--space-5);">
+        <label class="rating-field__label" for="id_how_joined">How did you find/join this lab? (optional)</label>
+        <textarea
+          class="review-textarea"
+          id="id_how_joined"
+          name="how_joined"
+          rows="3"
+          placeholder="How did you find/join this lab?"
+          maxlength="2000">{{ form.how_joined.value|default:'' }}</textarea>
+        {% if form.how_joined.errors %}<span class="review-field-error">{{ form.how_joined.errors|join:", " }}</span>{% endif %}
+      </div>
+
+      <div class="rating-field">
+        <label class="rating-field__label" for="id_advice">Advice for future students (optional)</label>
+        <textarea
+          class="review-textarea"
+          id="id_advice"
+          name="advice"
+          rows="3"
+          placeholder="Any advice for future students?"
+          maxlength="2000">{{ form.advice.value|default:'' }}</textarea>
+        {% if form.advice.errors %}<span class="review-field-error">{{ form.advice.errors|join:", " }}</span>{% endif %}
+      </div>
+    </section>
+
+    <div class="review-form__submit-wrap" style="display: flex; gap: var(--space-3); justify-content: center;">
+      <button type="submit" class="btn btn--accent btn--lg" id="submitBtn">Submit Review</button>
+      <a href="{% url 'lab_detail' slug=lab.slug %}" class="btn btn--secondary btn--lg">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById('labReviewForm').addEventListener('submit', function() {
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('submitBtn').textContent = 'Submitting…';
+  });
+
+  // Toggle recommend button styles on click
+  document.querySelectorAll('input[name="would_recommend"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      document.querySelectorAll('input[name="would_recommend"]').forEach(function(r) {
+        var label = r.closest('label');
+        if (r.checked) {
+          label.classList.remove('btn--secondary');
+          label.classList.add('btn--accent');
+        } else {
+          label.classList.remove('btn--accent');
+          label.classList.add('btn--secondary');
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

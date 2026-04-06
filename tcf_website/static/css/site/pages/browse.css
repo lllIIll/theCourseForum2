@@ -267,6 +267,47 @@
 }
 
 
+/* ===== LAB DEPARTMENT CARD ===== */
+
+.lab-department-card {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.lab-department-card__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--fg);
+  margin-bottom: var(--space-2);
+}
+
+.lab-department-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.lab-department-card__item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.lab-department-card__item a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.lab-department-card__item a:hover {
+  text-decoration: underline;
+}
+
+
 /* ===== CLUB CATEGORIES ===== */
 
 .club-grid {

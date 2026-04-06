@@ -43,7 +43,7 @@ def new_review(request):
                 messages.success(request, f"Successfully reviewed {instance.lab.pi_name}'s lab!")
                 return redirect("reviews")
             lab = form.cleaned_data.get("lab") if form.cleaned_data else None
-            return render(request, "reviews/new_lab_review.html", {
+            return render(request, "site/lab/lab_review_form.html", {
                 "form": form, "lab": lab, "mode": "labs", "is_lab": True,
             })
 
@@ -184,8 +184,8 @@ def _handle_lab_review_get(request, mode):
     lab = get_object_or_404(Lab, id=lab_id)
     return render(
         request,
-        "reviews/new_lab_review.html",
-        {"is_lab": True, "mode": mode, "lab": lab},
+        "site/lab/lab_review_form.html",
+        {"is_lab": True, "mode": mode, "lab": lab, "form": LabReviewForm()},
     )
 
 

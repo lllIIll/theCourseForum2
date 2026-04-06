@@ -69,7 +69,7 @@ def lab_detail(request, slug):
 
     return render(
         request,
-        "lab/lab_detail.html",
+        "site/lab/lab_detail.html",
         {
             "lab": lab,
             "stats": stats,

@@ -4,7 +4,7 @@ from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from ...forms import AdvancedSearchForm, ClubAdvancedSearchForm
+from ...forms import AdvancedSearchForm, ClubAdvancedSearchForm, LabSearchForm
 from ...models import Club, ClubCategory, Department, Lab, School
 from ...search.browse_helpers import (
     advanced_search_results_payload,
@@ -107,10 +107,10 @@ def _browse_courses(request, mode: str):
             ]
         )
     }
-    clas = featured["College of Arts & Sciences"]
-    seas = featured["School of Engineering & Applied Science"]
+    clas = featured.get("College of Arts & Sciences")
+    seas = featured.get("School of Engineering & Applied Science")
 
-    excluded_list = [clas.pk, seas.pk]
+    excluded_list = [s.pk for s in [clas, seas] if s is not None]
     other_schools = School.objects.exclude(pk__in=excluded_list).order_by("name")
 
     return render(
@@ -129,19 +129,33 @@ def _browse_courses(request, mode: str):
 
 
 def _browse_labs(request, mode: str):
-    """Labs browse: schools/departments grid."""
+    """Labs browse: search form + schools/departments grid."""
+    lab_form = LabSearchForm(request.GET or None)
+    has_search = lab_form.is_bound and lab_form.has_search_params()
+
+    labs_qs = Lab.objects.all()
+    if has_search and lab_form.is_valid():
+        data = lab_form.cleaned_data
+        if data.get("q"):
+            q = data["q"].strip()
+            labs_qs = labs_qs.filter(combined_search_text__icontains=q)
+        if data.get("department"):
+            labs_qs = labs_qs.filter(department_id=data["department"])
+        if data.get("recruiting"):
+            labs_qs = labs_qs.filter(is_recruiting=True)
+
     schools = (
-        School.objects.filter(department__lab__isnull=False)
+        School.objects.filter(department__lab__in=labs_qs)
         .distinct()
         .prefetch_related(
             Prefetch(
                 "department_set",
-                queryset=Department.objects.filter(lab__isnull=False)
+                queryset=Department.objects.filter(lab__in=labs_qs)
                 .distinct()
                 .prefetch_related(
                     Prefetch(
                         "lab_set",
-                        queryset=Lab.objects.order_by("pi_name"),
+                        queryset=labs_qs.order_by("pi_name"),
                         to_attr="labs",
                     )
                 )
@@ -151,6 +165,7 @@ def _browse_labs(request, mode: str):
         )
         .order_by("name")
     )
+
     return render(
         request,
         "site/catalog/browse.html",
@@ -158,6 +173,8 @@ def _browse_labs(request, mode: str):
             "is_club": False,
             "is_lab": True,
             "mode": mode,
+            "lab_form": lab_form if lab_form.is_bound else LabSearchForm(),
+            "has_search": has_search,
             "lab_schools": schools,
         },
     )

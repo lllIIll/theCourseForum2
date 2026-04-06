@@ -7,6 +7,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".grok.io", ".lhr.life"]
 
+# Disable ORM query caching in local development. Management commands such as
+# `load_labs` run in separate processes and otherwise leave runserver serving
+# stale LocMem-cached query results until the container restarts.
+CACHALOT_ENABLED = False
+
 # Local PostgreSQL database
 DATABASES = {
     "default": {

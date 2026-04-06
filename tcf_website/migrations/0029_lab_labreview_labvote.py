@@ -10,7 +10,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("tcf_website", "0023_remove_sectionenrollment_section_and_more"),
+        ("tcf_website", "0028_schedule_share_token_schedulebookmark_and_more"),
     ]
 
     operations = [
