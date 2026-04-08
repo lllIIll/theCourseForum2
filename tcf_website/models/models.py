@@ -299,10 +299,10 @@ class Lab(models.Model):
         return self.labreview_set.aggregate(
             overall=Avg("overall"),
             mentorship=Avg("mentorship"),
-            work_life=Avg("work_life"),
-            friendliness=Avg("friendliness"),
-            inclusivity=Avg("inclusivity"),
+            lab_culture=Avg("lab_culture"),
             responsiveness=Avg("responsiveness"),
+            independence=Avg("independence"),
+            entry_selectivity=Avg("entry_selectivity"),
             hours_per_week=Avg("hours_per_week"),
         )
 
@@ -1513,10 +1513,10 @@ class LabReview(models.Model):
     # Lab rating dimensions (1-5). All required.
     overall = models.PositiveSmallIntegerField(choices=RATINGS)
     mentorship = models.PositiveSmallIntegerField(choices=RATINGS)
-    work_life = models.PositiveSmallIntegerField(choices=RATINGS)
-    friendliness = models.PositiveSmallIntegerField(choices=RATINGS)
-    inclusivity = models.PositiveSmallIntegerField(choices=RATINGS)
+    lab_culture = models.PositiveSmallIntegerField(choices=RATINGS)
     responsiveness = models.PositiveSmallIntegerField(choices=RATINGS)
+    independence = models.PositiveSmallIntegerField(choices=RATINGS)
+    entry_selectivity = models.PositiveSmallIntegerField(choices=RATINGS)
 
     # Hours per week spent in lab. Required.
     hours_per_week = models.PositiveSmallIntegerField(

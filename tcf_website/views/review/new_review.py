@@ -16,8 +16,9 @@ class LabReviewForm(django_forms.ModelForm):
     class Meta:
         model = LabReview
         fields = [
-            "lab", "overall", "mentorship", "work_life", "friendliness",
-            "inclusivity", "responsiveness", "hours_per_week", "role",
+            "lab", "overall", "mentorship", "lab_culture",
+            "responsiveness", "independence", "entry_selectivity",
+            "hours_per_week", "role",
             "period", "how_joined", "advice", "would_recommend", "text",
         ]
 from ...review.services import (
