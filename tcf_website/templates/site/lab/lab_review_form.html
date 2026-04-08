@@ -131,54 +131,39 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Work-Life Balance <span style="color: var(--danger);">*</span></label>
+          <label class="rating-field__label">Independence <span style="color: var(--danger);">*</span></label>
+          <p class="rating-field__hint">How much autonomy do you have over your research direction? (1 = very directed, 5 = fully autonomous)</p>
           <div class="rating-options">
             {% for i in "12345" %}
             <label class="rating-option">
-              <input type="radio" name="work_life" value="{{ i }}"
-                {% if form.work_life.value == i %}checked
-                {% elif not form.work_life.value and i == "3" %}checked
+              <input type="radio" name="independence" value="{{ i }}"
+                {% if form.independence.value == i %}checked
+                {% elif not form.independence.value and i == "3" %}checked
                 {% endif %}
                 required>
               <span class="rating-option__label">{{ i }}</span>
             </label>
             {% endfor %}
           </div>
-          {% if form.work_life.errors %}<span class="review-field-error">{{ form.work_life.errors|join:", " }}</span>{% endif %}
+          {% if form.independence.errors %}<span class="review-field-error">{{ form.independence.errors|join:", " }}</span>{% endif %}
         </div>
 
         <div class="rating-field">
           <label class="rating-field__label">Lab Culture <span style="color: var(--danger);">*</span></label>
+          <p class="rating-field__hint">How welcoming and collaborative is the overall lab environment?</p>
           <div class="rating-options">
             {% for i in "12345" %}
             <label class="rating-option">
-              <input type="radio" name="friendliness" value="{{ i }}"
-                {% if form.friendliness.value == i %}checked
-                {% elif not form.friendliness.value and i == "3" %}checked
+              <input type="radio" name="lab_culture" value="{{ i }}"
+                {% if form.lab_culture.value == i %}checked
+                {% elif not form.lab_culture.value and i == "3" %}checked
                 {% endif %}
                 required>
               <span class="rating-option__label">{{ i }}</span>
             </label>
             {% endfor %}
           </div>
-          {% if form.friendliness.errors %}<span class="review-field-error">{{ form.friendliness.errors|join:", " }}</span>{% endif %}
-        </div>
-
-        <div class="rating-field">
-          <label class="rating-field__label">Inclusivity <span style="color: var(--danger);">*</span></label>
-          <div class="rating-options">
-            {% for i in "12345" %}
-            <label class="rating-option">
-              <input type="radio" name="inclusivity" value="{{ i }}"
-                {% if form.inclusivity.value == i %}checked
-                {% elif not form.inclusivity.value and i == "3" %}checked
-                {% endif %}
-                required>
-              <span class="rating-option__label">{{ i }}</span>
-            </label>
-            {% endfor %}
-          </div>
-          {% if form.inclusivity.errors %}<span class="review-field-error">{{ form.inclusivity.errors|join:", " }}</span>{% endif %}
+          {% if form.lab_culture.errors %}<span class="review-field-error">{{ form.lab_culture.errors|join:", " }}</span>{% endif %}
         </div>
 
         <div class="rating-field">
@@ -196,6 +181,24 @@
             {% endfor %}
           </div>
           {% if form.responsiveness.errors %}<span class="review-field-error">{{ form.responsiveness.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="rating-field">
+          <label class="rating-field__label">Entry Bar <span style="color: var(--danger);">*</span></label>
+          <p class="rating-field__hint">How hard was it to get into this lab? (1 = very open / no requirements, 5 = highly selective / strong GPA + experience required)</p>
+          <div class="rating-options">
+            {% for i in "12345" %}
+            <label class="rating-option">
+              <input type="radio" name="entry_selectivity" value="{{ i }}"
+                {% if form.entry_selectivity.value == i %}checked
+                {% elif not form.entry_selectivity.value and i == "3" %}checked
+                {% endif %}
+                required>
+              <span class="rating-option__label">{{ i }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.entry_selectivity.errors %}<span class="review-field-error">{{ form.entry_selectivity.errors|join:", " }}</span>{% endif %}
         </div>
 
       </div>

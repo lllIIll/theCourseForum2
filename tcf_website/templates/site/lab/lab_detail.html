@@ -57,31 +57,31 @@
     </div>
 
     <div class="ratings-panel">
-      <div class="rating-row">
-        <span class="rating-row__label">Mentorship</span>
-        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.mentorship }}%"></div></div>
-        <span class="rating-row__value">{{ stats.mentorship|default:"—" }}</span>
-      </div>
-      <div class="rating-row">
-        <span class="rating-row__label">Work-Life</span>
-        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.work_life }}%"></div></div>
-        <span class="rating-row__value">{{ stats.work_life|default:"—" }}</span>
-      </div>
-      <div class="rating-row">
-        <span class="rating-row__label">Friendliness</span>
-        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.friendliness }}%"></div></div>
-        <span class="rating-row__value">{{ stats.friendliness|default:"—" }}</span>
-      </div>
-      <div class="rating-row">
-        <span class="rating-row__label">Inclusivity</span>
-        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.inclusivity }}%"></div></div>
-        <span class="rating-row__value">{{ stats.inclusivity|default:"—" }}</span>
-      </div>
-      <div class="rating-row">
-        <span class="rating-row__label">Responsive</span>
-        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.responsiveness }}%"></div></div>
-        <span class="rating-row__value">{{ stats.responsiveness|default:"—" }}</span>
-      </div>
+        <div class="rating-row">
+          <span class="rating-row__label">Mentorship</span>
+          <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.mentorship }}%"></div></div>
+          <span class="rating-row__value">{{ stats.mentorship|default:"—" }}</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-row__label">Lab Culture</span>
+          <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.lab_culture }}%"></div></div>
+          <span class="rating-row__value">{{ stats.lab_culture|default:"—" }}</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-row__label">Responsiveness</span>
+          <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.responsiveness }}%"></div></div>
+          <span class="rating-row__value">{{ stats.responsiveness|default:"—" }}</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-row__label">Independence</span>
+          <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.independence }}%"></div></div>
+          <span class="rating-row__value">{{ stats.independence|default:"—" }}</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-row__label">Entry Bar</span>
+          <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.entry_selectivity }}%"></div></div>
+          <span class="rating-row__value">{{ stats.entry_selectivity|default:"—" }}</span>
+        </div>
     </div>
   </div>
   {% endif %}

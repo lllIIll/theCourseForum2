@@ -21,7 +21,7 @@ def lab_detail(request, slug):
 
     # Compute bar widths (1-5 scale → 0-100%) for template
     bar_widths = {}
-    for key in ("mentorship", "work_life", "friendliness", "inclusivity", "responsiveness"):
+    for key in ("mentorship", "lab_culture", "responsiveness", "independence", "entry_selectivity"):
         val = stats.get(key)
         bar_widths[key] = round(val * 20, 1) if val is not None else 0
 

@@ -108,10 +108,10 @@ class Command(BaseCommand):
             defaults = {
                 "overall": row.get("rating_overall") or 3,
                 "mentorship": row.get("rating_mentorship") or 3,
-                "work_life": row.get("rating_work_life") or 3,
-                "friendliness": row.get("rating_friendliness") or 3,
-                "inclusivity": row.get("rating_inclusivity") or 3,
+                "lab_culture": row.get("rating_friendliness") or 3,
                 "responsiveness": row.get("rating_responsiveness") or 3,
+                "independence": row.get("rating_work_life") or 3,
+                "entry_selectivity": 3,  # no Supabase equivalent; default to middle
                 "hours_per_week": min(max(row.get("hours_per_week") or 0, 0), 80),
                 "would_recommend": row.get("would_recommend") or False,
                 "text": row.get("review_text") or "",
