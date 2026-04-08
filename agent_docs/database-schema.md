@@ -304,11 +304,11 @@ Reviews can link to a club via `review.club_id`.
 | lab_id | FK → lab | |
 | user_id | FK → user | |
 | overall | smallint | 1-5 rating |
-| mentorship | smallint | 1-5 rating |
-| work_life | smallint | 1-5 rating |
-| friendliness | smallint | 1-5 rating |
-| inclusivity | smallint | 1-5 rating |
-| responsiveness | smallint | 1-5 rating |
+| mentorship | smallint | 1-5 rating — PI investment in reviewer's growth |
+| lab_culture | smallint | 1-5 rating — welcoming / collaborative atmosphere |
+| responsiveness | smallint | 1-5 rating — PI responsiveness to questions |
+| independence | smallint | 1-5 rating — autonomy over research direction |
+| entry_selectivity | smallint | 1-5 rating — 1=very open, 5=highly selective |
 | hours_per_week | smallint | 0-80 |
 | role | varchar(20) | undergrad_ra, grad_ra, postdoc, staff, other |
 | period | varchar(100) | e.g. "Fall 2024 - Spring 2025" |

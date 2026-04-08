@@ -33,15 +33,15 @@ This means LabForum shares infrastructure, auth (UVA SSO via Python Social Auth)
 
 ## Planned Review Dimensions
 
-| Metric | Scale |
-|---|---|
-| Overall | 1-5 |
-| Mentorship | 1-5 |
-| Work-Life Balance | 1-5 |
-| Friendliness | 1-5 |
-| Inclusivity | 1-5 |
-| Responsiveness | 1-5 |
-| Hours/Week | integer |
+| Metric | Field | Scale | Notes |
+|---|---|---|---|
+| Overall | `overall` | 1-5 | |
+| Mentorship | `mentorship` | 1-5 | PI investment in your growth |
+| Lab Culture | `lab_culture` | 1-5 | Welcoming / collaborative atmosphere |
+| Responsiveness | `responsiveness` | 1-5 | PI responsiveness to questions |
+| Independence | `independence` | 1-5 | Autonomy over research direction |
+| Entry Bar | `entry_selectivity` | 1-5 | 1=very open, 5=highly selective |
+| Hours/Week | `hours_per_week` | integer | |
 
 ## Data Source
 
@@ -52,6 +52,7 @@ This means LabForum shares infrastructure, auth (UVA SSO via Python Social Auth)
 ## What Has Been Built
 
 - **Models:** `Lab`, `LabReview`, `LabVote` in `tcf_website/models/models.py`
+  - `LabReview` rating dimensions redesigned: `mentorship`, `lab_culture`, `responsiveness`, `independence`, `entry_selectivity` (migration `0031`)
   - `LabReview` has a `supabase_id` UUID field (migration `0030`) for idempotent syncing
   - `LabReview.paginate()` handles both `PageNotAnInteger` and `EmptyPage`
 - **Migrations:** `0029_lab_labreview_labvote.py`, `0030_labreview_supabase_id.py`
