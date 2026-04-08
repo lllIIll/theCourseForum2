@@ -64,9 +64,10 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 - `LabReview` — 6 rating dimensions, role, period, advice, with sort/paginate/vote methods
 - `LabVote` — same pattern as Vote, unique constraint on (user, review)
 
-### 8. Lab Data Loading (`management/commands/load_labs.py`)
-- Reads `lab_data/labs.json`, maps department strings via `DEPARTMENT_MAP`
-- 284 SEAS faculty imported (68 skipped — no department match)
+### 8. Lab Data Loading
+- `load_labs` — fetches 352 SEAS faculty from Supabase REST API, maps department strings via `DEPARTMENT_MAP`, uses `update_or_create` on slug. Result: 337 created, 15 skipped (no dept match). Runs automatically on `docker-compose up`.
+- `load_lab_reviews` — fetches approved reviews from Supabase `reviews` table (joined with `labs` on slug), maps to `LabReview` fields, uses `supabase_id` for idempotent updates. Requires a sentinel `supabase_import` system user (created automatically). Runs automatically on `docker-compose up`.
+- `seed_lab_reviews` — dev-only; creates 2 sample reviews (rating≈4) per lab so metrics UI is visible. Defaults to first 10 labs; use `--all` for all labs. Run `--clear` before production. Does **not** run automatically — must be invoked manually.
 
 ## Existing Detail Page Patterns (Reference)
 
@@ -103,7 +104,7 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 - **Breadcrumb:** Labs / School / Department / PI Name
 - **Header:** PI name (h1) + department + title, recruiting badge
 - **Info card:** Research description (left), photo + contact links (right), research area tags
-- **Stats grid:** 8 cards — OVERALL, MENTORSHIP, CULTURE, WORK-LIFE, INCLUSIVITY, RESPONSIVENESS, HRS/WK, % RECOMMEND
+- **Metrics panel:** 3 large stat cards (Overall, Hrs/Week, Recommend%) + 5 rating bars (Mentorship, Work-Life, Friendliness, Inclusivity, Responsiveness). Bar widths computed server-side as `value × 20` (1–5 → 0–100%). Uses `course_instructor.css` classes. Section hidden when no reviews exist.
 - **Reviews tab:** Count + "Add your review!" button, sort dropdown, paginated review cards
 - **Review cards:** Role/period header, 6 rating badges, text, advice, upvote/downvote buttons
 
@@ -119,7 +120,7 @@ LabForum integrates into the existing browse page (`/browse/`) as a third tab al
 
 ## Resolved Decisions
 
-1. **Lab data:** 352 SEAS faculty scraped, 284 imported via `load_labs` management command
+1. **Lab data:** 352 SEAS faculty scraped, 337 imported via `load_labs` management command (15 skipped — no matching Django department)
 2. **URLs:** Dedicated `/lab/<slug>/` pages (not reusing course pattern)
 3. **Search:** Searchbar radio toggle includes labs; trigram search on PI name + research areas + department
 4. **Navigation:** Browse toggle is the primary entry point (no sidebar entry)

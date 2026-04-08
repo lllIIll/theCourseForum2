@@ -9,6 +9,8 @@ services:
     command:
       bash -c "/wait-for-it.sh tcf_db:${DB_PORT} -- \
       python manage.py migrate && \
+      python manage.py load_labs && \
+      python manage.py load_lab_reviews && \
       python manage.py collectstatic --noinput && \
       python manage.py invalidate_cachalot tcf_website && \
       echo 'Starting Django Server...' && \

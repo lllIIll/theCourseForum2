@@ -319,6 +319,7 @@ Reviews can link to a club via `review.club_id`.
 | hidden | boolean | moderation flag |
 | toxicity_rating | int | |
 | toxicity_category | varchar | |
+| supabase_id | uuid | nullable, unique — used for idempotent sync from Supabase |
 | created | timestamptz | |
 | modified | timestamptz | |
 

@@ -40,41 +40,49 @@
 <div class="lab-content">
 
   {% if stats.overall %}
-  <div class="lab-stats-grid">
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.overall }}</div>
-      <div class="lab-stat-card__label">Overall</div>
+  <div class="stats-left">
+    <div class="stats-summary">
+      <div class="stats-card">
+        <span class="stats-card__value" style="color: var(--primary)">{{ stats.overall }}</span>
+        <span class="stats-card__label">&#9733; Overall</span>
+      </div>
+      <div class="stats-card">
+        <span class="stats-card__value" style="color: var(--primary)">{{ stats.hours_per_week|default:"—" }}</span>
+        <span class="stats-card__label">&#9201; Hrs/Week</span>
+      </div>
+      <div class="stats-card">
+        <span class="stats-card__value" style="color: var(--primary)">{% if recommend_pct is not None %}{{ recommend_pct }}%{% else %}—{% endif %}</span>
+        <span class="stats-card__label">Recommend</span>
+      </div>
     </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.mentorship }}</div>
-      <div class="lab-stat-card__label">Mentorship</div>
+
+    <div class="ratings-panel">
+      <div class="rating-row">
+        <span class="rating-row__label">Mentorship</span>
+        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.mentorship }}%"></div></div>
+        <span class="rating-row__value">{{ stats.mentorship|default:"—" }}</span>
+      </div>
+      <div class="rating-row">
+        <span class="rating-row__label">Work-Life</span>
+        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.work_life }}%"></div></div>
+        <span class="rating-row__value">{{ stats.work_life|default:"—" }}</span>
+      </div>
+      <div class="rating-row">
+        <span class="rating-row__label">Friendliness</span>
+        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.friendliness }}%"></div></div>
+        <span class="rating-row__value">{{ stats.friendliness|default:"—" }}</span>
+      </div>
+      <div class="rating-row">
+        <span class="rating-row__label">Inclusivity</span>
+        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.inclusivity }}%"></div></div>
+        <span class="rating-row__value">{{ stats.inclusivity|default:"—" }}</span>
+      </div>
+      <div class="rating-row">
+        <span class="rating-row__label">Responsive</span>
+        <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.responsiveness }}%"></div></div>
+        <span class="rating-row__value">{{ stats.responsiveness|default:"—" }}</span>
+      </div>
     </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.work_life }}</div>
-      <div class="lab-stat-card__label">Work-Life</div>
-    </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.friendliness }}</div>
-      <div class="lab-stat-card__label">Culture</div>
-    </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.inclusivity }}</div>
-      <div class="lab-stat-card__label">Inclusivity</div>
-    </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.responsiveness }}</div>
-      <div class="lab-stat-card__label">Responsiveness</div>
-    </div>
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ stats.hours_per_week }}</div>
-      <div class="lab-stat-card__label">Hrs/Wk</div>
-    </div>
-    {% if recommend_pct is not None %}
-    <div class="lab-stat-card">
-      <div class="lab-stat-card__value">{{ recommend_pct }}%</div>
-      <div class="lab-stat-card__label">Recommend</div>
-    </div>
-    {% endif %}
   </div>
   {% endif %}
 

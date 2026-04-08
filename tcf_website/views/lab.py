@@ -19,6 +19,12 @@ def lab_detail(request, slug):
     stats = lab.avg_ratings()
     stats = {k: round(v, 1) if v is not None else None for k, v in stats.items()}
 
+    # Compute bar widths (1-5 scale → 0-100%) for template
+    bar_widths = {}
+    for key in ("mentorship", "work_life", "friendliness", "inclusivity", "responsiveness"):
+        val = stats.get(key)
+        bar_widths[key] = round(val * 20, 1) if val is not None else 0
+
     # Would recommend percentage
     recommend_data = lab.labreview_set.aggregate(
         total=Count("id"),
@@ -79,6 +85,7 @@ def lab_detail(request, slug):
             "sort_method": method,
             "breadcrumbs": breadcrumbs,
             "research_areas": research_area_list,
+            "bar_widths": bar_widths,
             "mode": "labs",
             "is_lab": True,
         },

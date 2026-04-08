@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.aggregates.general import ArrayAgg
 from django.contrib.postgres.indexes import GinIndex
-from django.core.paginator import Page, Paginator
+from django.core.paginator import EmptyPage, Page, PageNotAnInteger, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import (
@@ -1541,6 +1541,8 @@ class LabReview(models.Model):
     toxicity_rating = models.IntegerField(default=0)
     # Most relevant toxicity category, only exists if review has text.
     toxicity_category = models.CharField(blank=True)
+    # Supabase UUID for idempotent syncing. Optional.
+    supabase_id = models.UUIDField(null=True, blank=True, unique=True, db_index=True)
     # Review created date. Required.
     created = models.DateTimeField(auto_now_add=True)
     # Review modified date. Required.
@@ -1597,6 +1599,8 @@ class LabReview(models.Model):
         paginator = Paginator(reviews, per_page)
         try:
             return paginator.page(page_number)
+        except PageNotAnInteger:
+            return paginator.page(1)
         except EmptyPage:
             return paginator.page(paginator.num_pages)
 
