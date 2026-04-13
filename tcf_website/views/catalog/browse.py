@@ -143,6 +143,9 @@ def _browse_labs(request, mode: str):
             labs_qs = labs_qs.filter(department_id=data["department"])
         if data.get("recruiting"):
             labs_qs = labs_qs.filter(is_recruiting=True)
+    else:
+        # Default: show only recruiting labs for easier navigation
+        labs_qs = labs_qs.filter(is_recruiting=True)
 
     schools = (
         School.objects.filter(department__lab__in=labs_qs)

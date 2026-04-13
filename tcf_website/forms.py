@@ -130,7 +130,7 @@ class LabSearchForm(forms.Form):
 
     q = forms.CharField(required=False, label="Lab name or PI")
     department = forms.ChoiceField(required=False, label="Department")
-    recruiting = forms.BooleanField(required=False, label="Recruiting only")
+    recruiting = forms.BooleanField(required=False, label="Recruiting only", initial=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
