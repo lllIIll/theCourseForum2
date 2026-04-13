@@ -1,21 +1,115 @@
-/* Email builder inline section */
-.email-builder {
-    border: 2px solid #d75626;
+/* Cold Email Template Builder */
+
+.eb {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-top: var(--space-4);
 }
 
-.email-builder-context {
-    background-color: #f8f9fa;
-    border-left: 3px solid #d75626;
-    padding: 12px;
-    border-radius: 0 4px 4px 0;
+/* ===== TIPS ===== */
+
+.eb__tips {
+  margin-bottom: var(--space-6);
 }
 
-.eb-preview-val {
-    color: #d75626;
-    font-style: italic;
+.eb__tips-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-3);
 }
 
-#eb-copy-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.eb__tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.eb__tips-list li {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  padding-left: var(--space-4);
+  position: relative;
+}
+
+.eb__tips-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.eb__hint {
+  font-size: var(--text-sm);
+  color: var(--fg);
+  background: var(--bg-muted);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--accent);
+}
+
+/* ===== TEMPLATE ===== */
+
+.eb__template {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.eb__subject {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  background: var(--bg-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.eb__subject-label {
+  font-weight: var(--font-semibold);
+  color: var(--fg-muted);
+  margin-right: var(--space-1);
+}
+
+.eb__body {
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--fg);
+  white-space: pre-wrap;
+  font-family: var(--font-sans);
+}
+
+/* ===== ACTIONS ===== */
+
+.eb__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.eb__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.eb__copied {
+  font-size: var(--text-sm);
+  color: var(--color-success-600);
+  font-weight: var(--font-semibold);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.eb__copied--visible {
+  opacity: 1;
 }

@@ -7,6 +7,7 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/site/pages/course_instructor.css' %}">
 <link rel="stylesheet" href="{% static 'css/site/pages/lab.css' %}">
+<link rel="stylesheet" href="{% static 'lab/email_builder.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -260,6 +261,7 @@
 {% block scripts %}
 <script src="{% static 'js/site/review/review_votes.js' %}"></script>
 <script src="{% static 'lab/lab_review.js' %}"></script>
+<script src="{% static 'lab/email_builder.js' %}"></script>
 <script>
 // Sort select redirect
 const sortSelect = document.getElementById('review-sort');

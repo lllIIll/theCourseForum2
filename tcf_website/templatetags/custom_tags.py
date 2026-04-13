@@ -22,6 +22,18 @@ def remove_email(value):
     return str(value).split("(", maxsplit=1)[0]
 
 
+_SUFFIXES = {"ph.d.", "phd", "jr.", "jr", "iii", "ii", "iv", "m.d.", "md",
+             "m.s.", "ms", "m.b.a.", "mba"}
+
+
+@register.filter
+def split_last_name(full_name):
+    """Extract the last name from a full name, ignoring academic suffixes."""
+    parts = [p for p in str(full_name).split()
+             if p.lower().rstrip(",") not in _SUFFIXES]
+    return parts[-1].rstrip(",") if parts else full_name
+
+
 def _split_csv_keys(raw_keys):
     """Split comma-separated key strings into a clean key list."""
     if not raw_keys:

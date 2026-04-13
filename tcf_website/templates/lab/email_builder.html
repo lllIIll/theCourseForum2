@@ -1,98 +1,64 @@
+{% load custom_tags %}
 {% comment %}
-  Inline email builder for cold emailing a PI.
-  Pre-fills PI context from lab data. Purely client-side — no Django views needed.
+  Cold email template for reaching out to a PI.
+  Shows a brief guide + copy-paste template with PI details pre-filled.
   Only included when lab.email is non-empty.
 {% endcomment %}
 
-<div class="email-builder card mb-4" id="email-builder"
-     data-pi-name="{{ lab.pi_name }}"
+<div class="eb" id="email-builder"
      data-pi-email="{{ lab.email }}"
-     data-department="{{ lab.department.name }}"
-     data-research-areas="{% for area in research_areas %}{{ area }}{% if not forloop.last %}, {% endif %}{% endfor %}">
-  <div class="card-body">
-    <h4 class="card-title" style="color: #d75626;">
-      <i class="fas fa-envelope mr-2"></i>Email Builder
-    </h4>
-    <p class="text-muted mb-3">Fill in your details below. We'll help you write a professional cold email to this PI.</p>
+     data-pi-name="{{ lab.pi_name }}">
 
-    <!-- PI context (auto-filled from lab data) -->
-    <div class="email-builder-context mb-3">
-      <div class="mb-2">
-        <small class="text-uppercase font-weight-bold" style="color: #d75626;">Emailing</small><br>
-        <span>Professor {{ lab.pi_name }} &middot; {{ lab.department.name }} &middot; {{ lab.email }}</span>
-      </div>
-      {% if research_areas %}
-      <div>
-        <small class="text-uppercase font-weight-bold" style="color: #d75626;">Their Research Areas (reference these!)</small><br>
-        <span>{% for area in research_areas %}{{ area }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
-      </div>
-      {% endif %}
+  <div class="eb__tips">
+    <h4 class="eb__tips-title">Tips for a strong cold email</h4>
+    <ul class="eb__tips-list">
+      <li>Mention a <strong>specific paper, project, or research area</strong> — generic emails get ignored</li>
+      <li>Keep it to <strong>one short paragraph</strong> about why you're interested and what you bring</li>
+      <li>Attach your resume and be clear about when you can start</li>
+    </ul>
+    {% if research_areas %}
+    <div class="eb__hint">
+      <strong>Their research:</strong> {% for area in research_areas %}{{ area }}{% if not forloop.last %}, {% endif %}{% endfor %}
     </div>
+    {% endif %}
+  </div>
 
-    <!-- Form Fields -->
-    <div class="form-row mb-3">
-      <div class="form-group col-sm-6">
-        <label for="eb-name" class="font-weight-bold">Your Name <span class="text-danger">*</span></label>
-        <input type="text" class="form-control eb-field" id="eb-name" placeholder="e.g. Jane Smith" data-required="true">
-      </div>
-      <div class="form-group col-sm-6">
-        <label for="eb-year" class="font-weight-bold">Year & Major <span class="text-danger">*</span></label>
-        <input type="text" class="form-control eb-field" id="eb-year" placeholder="e.g. 2nd year CS major" data-required="true">
-      </div>
+  <div class="eb__template">
+    <div class="eb__subject">
+      <span class="eb__subject-label">Subject:</span>
+      Undergraduate Research Inquiry — [Your Name]
     </div>
+    <div class="eb__body" id="eb-template-text">Dear Professor {{ lab.pi_name|split_last_name }},
 
-    <div class="form-group mb-3">
-      <label for="eb-why" class="font-weight-bold">Why are you interested in this lab? <span class="text-danger">*</span></label>
-      {% if research_areas %}
-      <small class="form-text text-muted mb-1">Mention a specific paper, project, or research area. Generic = ignored.</small>
-      {% else %}
-      <small class="form-text text-muted mb-1">Visit this PI's Google Scholar or lab website to find a specific project to mention.</small>
-      {% endif %}
-      <textarea class="form-control eb-field" id="eb-why" rows="3" placeholder="e.g. I read your recent work on deep learning segmentation and was fascinated by..." data-required="true"></textarea>
-    </div>
+My name is [Your Name], and I am a [year, e.g. 2nd-year] [major] student at the University of Virginia. I am reaching out because [1-2 sentences about why you're interested in their specific research — reference a paper, project, or research area].
 
-    <div class="form-group mb-3">
-      <label for="eb-experience" class="font-weight-bold">Relevant experience <span class="text-danger">*</span></label>
-      <small class="form-text text-muted mb-1">Coursework, projects, skills, prior research. Keep it brief — 2-3 sentences.</small>
-      <textarea class="form-control eb-field" id="eb-experience" rows="2" placeholder="e.g. I've taken CS 4774 (Machine Learning) and completed a project on image classification..." data-required="true"></textarea>
-    </div>
+I have experience in [relevant coursework, skills, or prior research — keep it to 2-3 sentences]. I would be available to start [semester/time frame] and could commit approximately [X] hours per week.
 
-    <div class="form-row mb-3">
-      <div class="form-group col-sm-6">
-        <label for="eb-availability" class="font-weight-bold">Availability <span class="text-danger">*</span></label>
-        <small class="form-text text-muted mb-1">When could you start?</small>
-        <input type="text" class="form-control eb-field" id="eb-availability" placeholder="e.g. Summer 2026 or Fall 2026" data-required="true">
-      </div>
-      <div class="form-group col-sm-6">
-        <label for="eb-hours" class="font-weight-bold">Hours per week</label>
-        <small class="form-text text-muted mb-1">Be realistic.</small>
-        <input type="text" class="form-control eb-field" id="eb-hours" placeholder="e.g. 10-15 hours/week">
-      </div>
-    </div>
+I have attached my resume for your reference. Would you be open to a brief meeting to discuss potential opportunities?
 
-    <!-- Email Preview -->
-    <div class="email-builder-preview mt-4 pt-3" style="border-top: 2px solid #eee;">
-      <h5 class="mb-3"><i class="fas fa-eye mr-2"></i>Email Preview</h5>
-      <div class="card">
-        <div class="card-body" style="font-family: Georgia, serif; font-size: 14px; line-height: 1.7; color: #444;">
-          <div class="mb-2" style="border-bottom: 1px solid #eee; padding-bottom: 8px;">
-            <strong>Subject:</strong> <span id="eb-preview-subject">Undergraduate Research Position Inquiry</span>
-          </div>
-          <div id="eb-preview-body">
-            <p>Dear Professor <span class="eb-preview-val" id="eb-preview-pi">{{ lab.pi_name }}</span>,</p>
-            <p>My name is <span class="eb-preview-val" id="eb-preview-name">[Your Name]</span>, and I am a <span class="eb-preview-val" id="eb-preview-year">[Year & Major]</span> at the University of Virginia. I am writing to inquire about potential research opportunities in your lab.</p>
-            <p><span class="eb-preview-val" id="eb-preview-why">[Why you're interested — fill in above]</span></p>
-            <p><span class="eb-preview-val" id="eb-preview-experience">[Your experience — fill in above]</span></p>
-            <p>I would be available starting <span class="eb-preview-val" id="eb-preview-availability">[Availability]</span><span id="eb-preview-hours-section"> and could commit approximately <span class="eb-preview-val" id="eb-preview-hours">[Hours/week]</span></span>. I have attached my resume for your review. Would you be available to meet briefly to discuss potential opportunities?</p>
-            <p>Thank you for your time and consideration. I completely understand if there are no openings available at this time.</p>
-            <p>Best regards,<br><span class="eb-preview-val" id="eb-preview-signoff">[Your Name]</span><br>University of Virginia</p>
-          </div>
-        </div>
-      </div>
-      <button class="btn btn-primary mt-3" id="eb-copy-btn" disabled>
-        <i class="fas fa-copy mr-1"></i> Copy Email to Clipboard
-      </button>
-      <span class="text-success ml-2 d-none" id="eb-copy-confirm"><i class="fas fa-check"></i> Copied!</span>
-    </div>
+Thank you for your time.
+
+Best regards,
+[Your Name]
+University of Virginia</div>
+  </div>
+
+  <div class="eb__actions">
+    <button class="btn btn--accent btn--md" id="eb-copy-btn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      Copy Template
+    </button>
+    <a class="btn btn--primary btn--md" id="eb-mailto-link"
+       href="mailto:{{ lab.email }}?subject=Undergraduate%20Research%20Inquiry">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+      Open in Email
+    </a>
+    <span class="eb__copied" id="eb-copy-confirm">Copied!</span>
   </div>
 </div>
