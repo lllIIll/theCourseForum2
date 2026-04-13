@@ -23,6 +23,7 @@ class LabBrowseTestCase(TestCase):
             pi_name="Test Professor",
             department=self.department,
             research_areas="AI, ML",
+            is_recruiting=True,
         )
 
     def test_browse_labs_200(self):
