@@ -58,27 +58,27 @@
 
     <div class="ratings-panel">
         <div class="rating-row">
-          <span class="rating-row__label">Mentorship</span>
+          <span class="rating-row__label" title="Quality of guidance and support from the PI and senior lab members">Mentorship</span>
           <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.mentorship }}%"></div></div>
           <span class="rating-row__value">{{ stats.mentorship|default:"—" }}</span>
         </div>
         <div class="rating-row">
-          <span class="rating-row__label">Lab Culture</span>
+          <span class="rating-row__label" title="How welcoming, collaborative, and supportive the lab environment feels">Lab Culture</span>
           <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.lab_culture }}%"></div></div>
           <span class="rating-row__value">{{ stats.lab_culture|default:"—" }}</span>
         </div>
         <div class="rating-row">
-          <span class="rating-row__label">Responsiveness</span>
+          <span class="rating-row__label" title="How quickly and reliably the PI responds to questions and feedback">Responsiveness</span>
           <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.responsiveness }}%"></div></div>
           <span class="rating-row__value">{{ stats.responsiveness|default:"—" }}</span>
         </div>
         <div class="rating-row">
-          <span class="rating-row__label">Independence</span>
+          <span class="rating-row__label" title="How much freedom you have to explore your own ideas and direct your work">Independence</span>
           <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.independence }}%"></div></div>
           <span class="rating-row__value">{{ stats.independence|default:"—" }}</span>
         </div>
         <div class="rating-row">
-          <span class="rating-row__label">Entry Bar</span>
+          <span class="rating-row__label" title="How competitive or selective the lab is when accepting new members">Entry Bar</span>
           <div class="rating-row__bar"><div class="rating-row__fill rating-row__fill--success" style="width: {{ bar_widths.entry_selectivity }}%"></div></div>
           <span class="rating-row__value">{{ stats.entry_selectivity|default:"—" }}</span>
         </div>
