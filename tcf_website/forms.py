@@ -126,11 +126,10 @@ class ClubAdvancedSearchForm(forms.Form):
 
 
 class LabSearchForm(forms.Form):
-    """Lab browse filters (name/PI search, department, recruiting)."""
+    """Lab browse filters (name/PI search, department)."""
 
     q = forms.CharField(required=False, label="Lab name or PI")
     department = forms.ChoiceField(required=False, label="Department")
-    recruiting = forms.BooleanField(required=False, label="Recruiting only", initial=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -149,7 +148,5 @@ class LabSearchForm(forms.Form):
         if (data.get("q") or "").strip():
             return True
         if data.get("department"):
-            return True
-        if data.get("recruiting"):
             return True
         return False

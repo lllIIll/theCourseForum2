@@ -133,7 +133,8 @@ def _browse_labs(request, mode: str):
     lab_form = LabSearchForm(request.GET or None)
     has_search = lab_form.is_bound and lab_form.has_search_params()
 
-    labs_qs = Lab.objects.all()
+    # Only show recruiting labs — students want labs they can actually join
+    labs_qs = Lab.objects.filter(is_recruiting=True)
     if has_search and lab_form.is_valid():
         data = lab_form.cleaned_data
         if data.get("q"):
@@ -141,11 +142,6 @@ def _browse_labs(request, mode: str):
             labs_qs = labs_qs.filter(combined_search_text__icontains=q)
         if data.get("department"):
             labs_qs = labs_qs.filter(department_id=data["department"])
-        if data.get("recruiting"):
-            labs_qs = labs_qs.filter(is_recruiting=True)
-    else:
-        # Default: show only recruiting labs for easier navigation
-        labs_qs = labs_qs.filter(is_recruiting=True)
 
     schools = (
         School.objects.filter(department__lab__in=labs_qs)

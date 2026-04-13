@@ -13,13 +13,6 @@
       {% include "site/common/components/_combo_dropdown.html" with combo_name="department" combo_choices=lab_form.department.field.choices combo_selected=lab_form.department.value combo_aria_label="Department" %}
     </div>
 
-    <div class="advanced-search__field advanced-search__field--checkbox">
-      <label>&nbsp;</label>
-      <label class="advanced-search__checkbox">
-        <input type="checkbox" name="recruiting" {% if lab_form.recruiting.value %}checked{% endif %}>
-        <span>Recruiting only</span>
-      </label>
-    </div>
   </div>
 
   <div class="advanced-search__actions">
