@@ -301,7 +301,34 @@
 
   font-size: var(--text-sm);
   color: var(--fg-muted);
+}
+
+.rating-row__label.has-tooltip {
+  position: relative;
   cursor: help;
+  border-bottom: 1px dotted var(--fg-muted);
+}
+
+.rating-row__label.has-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 10;
+  width: 220px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--bg-primary, #1a1a2e);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.rating-row__label.has-tooltip:hover::after {
+  opacity: 1;
 }
 
 .rating-row__bar {

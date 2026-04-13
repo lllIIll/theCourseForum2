@@ -63,12 +63,15 @@ class LabModelTestCase(TestCase):
         lab = Lab.objects.create(pi_name="Rated Lab", department=self.department)
         LabReview.objects.create(
             lab=lab, user=self.user, overall=4, mentorship=5,
-            work_life=3, friendliness=4, inclusivity=5, responsiveness=3,
+            independence=3, lab_culture=4, entry_selectivity=2, responsiveness=3,
             hours_per_week=10, role="undergrad_ra", period="Fall 2024",
         )
         stats = lab.avg_ratings()
         self.assertEqual(stats["overall"], 4.0)
         self.assertEqual(stats["mentorship"], 5.0)
+        self.assertEqual(stats["independence"], 3.0)
+        self.assertEqual(stats["lab_culture"], 4.0)
+        self.assertEqual(stats["entry_selectivity"], 2.0)
 
     def test_str(self):
         """Test __str__ method in Lab model."""
@@ -95,7 +98,7 @@ class LabReviewTestCase(TestCase):
         )
         self.review = LabReview.objects.create(
             lab=self.lab, user=self.user1, overall=4, mentorship=3,
-            work_life=4, friendliness=5, inclusivity=4, responsiveness=3,
+            independence=4, lab_culture=5, entry_selectivity=2, responsiveness=3,
             hours_per_week=15, role="undergrad_ra", period="Spring 2025",
             text="Great lab.",
         )
@@ -132,7 +135,7 @@ class LabReviewTestCase(TestCase):
         """sort with 'Most Recent' orders by -created."""
         review2 = LabReview.objects.create(
             lab=self.lab, user=self.user2, overall=5, mentorship=5,
-            work_life=5, friendliness=5, inclusivity=5, responsiveness=5,
+            independence=5, lab_culture=5, entry_selectivity=3, responsiveness=5,
             hours_per_week=5, role="grad_ra", period="Fall 2024",
             text="Amazing.",
         )
@@ -157,7 +160,7 @@ class LabVoteTestCase(TestCase):
         )
         self.review = LabReview.objects.create(
             lab=self.lab, user=self.user, overall=3, mentorship=3,
-            work_life=3, friendliness=3, inclusivity=3, responsiveness=3,
+            independence=3, lab_culture=3, entry_selectivity=2, responsiveness=3,
             hours_per_week=10, role="other", period="2024",
         )
 
