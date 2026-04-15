@@ -39,6 +39,10 @@
   flex-shrink: 0;
 }
 
+.hero__logo--lab {
+  width: clamp(80px, 12vw, 140px);
+}
+
 .hero__title {
   font-family: var(--font-display);
   font-size: var(--text-4xl);

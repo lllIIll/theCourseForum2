@@ -61,6 +61,22 @@
 }
 
 
+/* ===== BACK LINK ===== */
+
+.lab-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.lab-back-link:hover {
+  color: var(--fg);
+}
+
+
 /* ===== LAB CONTENT ===== */
 
 .lab-content {
@@ -263,4 +279,47 @@
   font-size: var(--text-sm);
   color: var(--fg);
   margin-top: var(--space-2);
+}
+
+
+/* ===== RESEARCH GUIDE ===== */
+
+.guide-section {
+  margin-bottom: var(--space-8);
+}
+
+.guide-section__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-6);
+}
+
+.guide-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.guide-card__question {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.guide-card__answer {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--fg-muted);
+}
+
+.guide-card__verdict {
+  font-weight: var(--font-semibold);
+  color: var(--accent);
+}
+
+.guide-actions {
+  display: flex;
+  gap: var(--space-3);
 }

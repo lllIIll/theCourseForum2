@@ -43,15 +43,17 @@
     <div class="header__actions">
       <!-- Mode Toggle -->
       <div class="mode-toggle">
-        <a href="{% mode_toggle_url request 'courses' %}" class="mode-toggle__item {% if request.GET.mode != 'clubs' and request.GET.mode != 'labs' %}is-active{% endif %}" aria-label="Switch to Courses">
+        {% with effective_mode=request.GET.mode|default:mode|default:"courses" %}
+        <a href="{% mode_toggle_url request 'courses' %}" class="mode-toggle__item {% if effective_mode != 'clubs' and effective_mode != 'labs' %}is-active{% endif %}" aria-label="Switch to Courses">
           Courses
         </a>
-        <a href="{% mode_toggle_url request 'clubs' %}" class="mode-toggle__item {% if request.GET.mode == 'clubs' %}is-active{% endif %}" aria-label="Switch to Clubs">
+        <a href="{% mode_toggle_url request 'clubs' %}" class="mode-toggle__item {% if effective_mode == 'clubs' %}is-active{% endif %}" aria-label="Switch to Clubs">
           Clubs
         </a>
-        <a href="{% mode_toggle_url request 'labs' %}" class="mode-toggle__item {% if request.GET.mode == 'labs' %}is-active{% endif %}" aria-label="Switch to Labs">
+        <a href="{% mode_toggle_url request 'labs' %}" class="mode-toggle__item {% if effective_mode == 'labs' %}is-active{% endif %}" aria-label="Switch to Labs">
           Labs
         </a>
+        {% endwith %}
       </div>
 
       <!-- Recently viewed (courses or clubs by mode) -->

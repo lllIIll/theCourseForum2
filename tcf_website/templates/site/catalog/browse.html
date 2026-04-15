@@ -72,7 +72,11 @@
   {% include "site/catalog/components/_lab_search_form.html" %}
   <div id="browse-default-catalog">
   {% for school in lab_schools %}
+  {% if "Engineering" in school.name %}
+  {% include "site/catalog/components/_lab_school_section.html" with school=school expanded=True %}
+  {% else %}
   {% include "site/catalog/components/_lab_school_section.html" with school=school %}
+  {% endif %}
   {% empty %}
   <p style="color: var(--fg-muted); margin-top: var(--space-8);">
     {% if has_search %}No labs matched your search.{% else %}No labs found. Check back later.{% endif %}

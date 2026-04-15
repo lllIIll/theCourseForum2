@@ -13,16 +13,13 @@
 {% block content %}
 <div class="lab-header">
   <div class="lab-header__inner">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      {% for crumb in breadcrumbs %}
-      {% if crumb.2 %}
-      <span class="breadcrumb__current">{{ crumb.0 }}</span>
-      {% else %}
-      <a href="{{ crumb.1 }}" class="breadcrumb__link">{{ crumb.0 }}</a>
-      <span class="breadcrumb__separator">/</span>
-      {% endif %}
-      {% endfor %}
-    </nav>
+    <a href="{% url 'browse' %}?mode=labs" class="lab-back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Labs
+    </a>
 
     <div class="lab-header__title-row">
       <h1 class="lab-header__title">{{ lab.pi_name }}</h1>

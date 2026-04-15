@@ -1,0 +1,56 @@
+{% extends "site/common/base.html" %}
+{% load static %}
+
+{% block title %}Research Guide | theCourseForum{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/site/pages/lab.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="lab-header">
+  <div class="lab-header__inner">
+    <h1 class="lab-header__title">Understanding Research</h1>
+    <p class="lab-header__department">Everything you need to know about getting into a lab at UVA</p>
+  </div>
+</div>
+
+<div class="lab-content">
+  <div class="guide-section">
+    <h2 class="guide-section__title">FAQ</h2>
+
+    <div class="guide-card">
+      <h3 class="guide-card__question">First years aren't welcome to research</h3>
+      <div class="guide-card__answer">
+        <span class="guide-card__verdict">FALSE.</span>
+        Professors LOVE first years. A professor can train a first year and then have them work in the lab for four years, having to train less people overall.
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3 class="guide-card__question">What's the best way to reach out to professors?</h3>
+      <div class="guide-card__answer">
+        By default, cold-emailing professors is the bare minimum to getting into research at UVA. You can reach out to others in the research group, or look for the professor in person. Some professors list particular ways to contact them for research (like an application). Don't be afraid to contact professors, and follow up.
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3 class="guide-card__question">A professor ignored me. Should I give up?</h3>
+      <div class="guide-card__answer">
+        Professors' inboxes are overloaded. Often, you will have to send over 10 emails to 10 different professors before getting a reply back. Other methods of forming connections often have higher response rates.
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3 class="guide-card__question">How can I use LabForum to find the right lab for me?</h3>
+      <div class="guide-card__answer">
+        Click on the Labs tab and browse through the labs. By default, you will be viewing only recruiting labs and professors. They are sorted by department, and you can narrow options by searching for a keyword like "Machine Learning." Press on a specific lab and you'll see a description, overall rating, hours per week, as well as other metrics that can be useful.
+      </div>
+    </div>
+  </div>
+
+  <div class="guide-actions">
+    <a href="{% url 'browse' %}?mode=labs" class="btn btn--accent btn--md">Browse Labs</a>
+  </div>
+</div>
+{% endblock %}

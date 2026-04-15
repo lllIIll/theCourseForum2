@@ -19,14 +19,23 @@ def index(request):
 
     mode = request.GET.get("mode", "courses")
     is_club = mode == "clubs"
+    is_lab = mode == "labs"
+
+    if is_lab:
+        mode_noun = "lab"
+        search_placeholder = "Search for a lab or professor..."
+    elif is_club:
+        mode_noun = "club"
+        search_placeholder = "Search for a club..."
+    else:
+        mode_noun = "course"
+        search_placeholder = "Search for a course or professor..."
 
     context = {
         "executive_team": team_info["executive_team"],
         "mode": mode,
-        "mode_noun": "club" if is_club else "course",
-        "search_placeholder": (
-            "Search for a club..." if is_club else "Search for a course or professor..."
-        ),
+        "mode_noun": mode_noun,
+        "search_placeholder": search_placeholder,
     }
     context.update(landing_spotlight_context(mode))
 

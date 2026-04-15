@@ -110,3 +110,8 @@ def lab_downvote(request, review_id):
         review.downvote(request.user)
         return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})
+
+
+def research_guide(request):
+    """Static research guide page."""
+    return render(request, "site/lab/research_guide.html", {"mode": "labs"})

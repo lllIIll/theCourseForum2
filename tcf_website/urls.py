@@ -88,6 +88,7 @@ urlpatterns = [
         name="review_instructor_options",
     ),
     path("lab/<slug:slug>/", views.lab_detail, name="lab_detail"),
+    path("lab/guide/research/", views.research_guide, name="research_guide"),
     path("lab-reviews/<int:review_id>/upvote/", views.lab_upvote, name="lab_upvote"),
     path("lab-reviews/<int:review_id>/downvote/", views.lab_downvote, name="lab_downvote"),
     path("profile/", views.profile, name="profile"),

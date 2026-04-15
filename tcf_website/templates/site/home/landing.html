@@ -19,9 +19,13 @@
 <section class="hero">
   <div class="hero__content">
     <div class="hero__brand">
+      {% if mode_noun == 'lab' %}
+      <img src="{% static 'base/img/tlf_logo.png' %}" alt="theLabForum logo" class="hero__logo hero__logo--lab">
+      {% else %}
       <img src="{% static 'base/img/new_logo.svg' %}" alt="theCourseForum logo" class="hero__logo">
+      {% endif %}
       <div>
-        <h1 class="hero__title">theCourseForum</h1>
+        <h1 class="hero__title">{% if mode_noun == 'lab' %}theLabForum{% else %}theCourseForum{% endif %}</h1>
         <p class="hero__tagline">connecting you to the {{ mode_noun }}s you love.</p>
       </div>
     </div>
@@ -46,11 +50,25 @@
       </div>
       <h3 class="feature-card__title">Browse</h3>
       <p class="feature-card__description">
-        See what other UVA students say about {% if mode_noun == 'club' %}clubs{% else %}classes, and professors{% endif %}.
+        {% if mode_noun == 'lab' %}Find recruiting labs and see what students say about working in them.{% elif mode_noun == 'club' %}See what other UVA students say about clubs.{% else %}See what other UVA students say about classes and professors.{% endif %}
       </p>
     </a>
-    
-    <!-- Feature 2: Schedule -->
+
+    <!-- Feature 2: Schedule (courses/clubs) or Research Guide (labs) -->
+    {% if mode_noun == 'lab' %}
+    <a href="{% url 'research_guide' %}" class="feature-card">
+      <div class="feature-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+      </div>
+      <h3 class="feature-card__title">Research Guide</h3>
+      <p class="feature-card__description">
+        New to research? Learn how to find and join a lab at UVA.
+      </p>
+    </a>
+    {% else %}
     {% if user.is_authenticated %}
     <a href="{% url 'schedule' %}" class="feature-card">
     {% else %}
@@ -69,7 +87,8 @@
         Plan and customize your class schedule.
       </p>
     </a>
-    
+    {% endif %}
+
     <!-- Feature 3: Reviews -->
     {% if user.is_authenticated %}
     <a href="{% mode_url request 'new_review' %}" class="feature-card">
@@ -84,7 +103,7 @@
       </div>
       <h3 class="feature-card__title">Write a Review</h3>
       <p class="feature-card__description">
-        Help our community by telling others about your class experience.
+        {% if mode_noun == 'lab' %}Help other students by sharing your lab experience.{% else %}Help our community by telling others about your class experience.{% endif %}
       </p>
     </a>
   </div>
