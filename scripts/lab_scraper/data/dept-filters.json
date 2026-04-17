@@ -1,0 +1,121 @@
+{
+  "scraped_at": "2026-04-17T15:50:51.413Z",
+  "faculty_url": "https://engineering.virginia.edu/faculty",
+  "filters": [
+    {
+      "id": 231,
+      "label": "Applied Mathematics",
+      "slug": "applied-mathematics"
+    },
+    {
+      "id": 7,
+      "label": "Biomedical Engineering",
+      "slug": "biomedical-engineering"
+    },
+    {
+      "id": 8,
+      "label": "Chemical Engineering",
+      "slug": "chemical-engineering"
+    },
+    {
+      "id": 9,
+      "label": "Civil and Environmental Engineering",
+      "slug": "civil-and-environmental-engineering"
+    },
+    {
+      "id": 226,
+      "label": "Computer Engineering",
+      "slug": "computer-engineering"
+    },
+    {
+      "id": 6,
+      "label": "Computer Science",
+      "slug": "computer-science"
+    },
+    {
+      "id": 10,
+      "label": "Electrical and Computer Engineering",
+      "slug": "electrical-and-computer-engineering"
+    },
+    {
+      "id": 11,
+      "label": "Engineering and Society",
+      "slug": "engineering-and-society"
+    },
+    {
+      "id": 236,
+      "label": "Engineering Science",
+      "slug": "engineering-science"
+    },
+    {
+      "id": 266,
+      "label": "First Year Engineering",
+      "slug": "first-year-engineering"
+    },
+    {
+      "id": 12,
+      "label": "Materials Science and Engineering",
+      "slug": "materials-science-and-engineering"
+    },
+    {
+      "id": 13,
+      "label": "Mechanical and Aerospace Engineering",
+      "slug": "mechanical-and-aerospace-engineering"
+    },
+    {
+      "id": 14,
+      "label": "Systems and Information Engineering",
+      "slug": "systems-and-information-engineering"
+    }
+  ],
+  "coverage": {
+    "unfiltered_total": 350,
+    "union_of_filters_total": 325,
+    "only_unfiltered": [
+      "huiwang-ai",
+      "brian-h-annex",
+      "stuart-s-berr",
+      "kenneth-l-brayman",
+      "mete-civelek",
+      "christopher-deppmann",
+      "cassandra-l-fraser",
+      "bradley-d-gelfand-phd",
+      "alexander-l-sasha-klibanov",
+      "bijoy-kumar-kundu",
+      "merry-mani",
+      "tim-mcmurry",
+      "g-wilson-miller",
+      "randall-j-moorman",
+      "john-p-mugler",
+      "ammasi-periasamy",
+      "rebecca-pompano",
+      "george-f-rich",
+      "heman-shakeri",
+      "jason-sheehan",
+      "nathan-sheffield",
+      "robert-h-thiele",
+      "mark-bennett-williams",
+      "zequan-yang",
+      "paul-yates",
+      "chongzhi-zang"
+    ],
+    "only_filtered": [
+      "kimberly-kelly"
+    ]
+  },
+  "per_filter_counts": {
+    "Applied Mathematics": 17,
+    "Biomedical Engineering": 37,
+    "Chemical Engineering": 27,
+    "Civil and Environmental Engineering": 27,
+    "Computer Engineering": 30,
+    "Computer Science": 78,
+    "Electrical and Computer Engineering": 49,
+    "Engineering and Society": 22,
+    "Engineering Science": 0,
+    "First Year Engineering": 7,
+    "Materials Science and Engineering": 26,
+    "Mechanical and Aerospace Engineering": 49,
+    "Systems and Information Engineering": 28
+  }
+}

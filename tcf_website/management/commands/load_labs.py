@@ -40,7 +40,9 @@ DEPARTMENT_MAP = {
     "School of Engineering and Applied Science": "General Engineering",
     "School of Engineering & Applied Science": "General Engineering",
     "First Year Engineering Center": "General Engineering",
+    "First Year Engineering": "General Engineering",
     "Engineering Education": "General Engineering",
+    "Engineering Science": "General Engineering",
     "Environmental Science": "Environmental Sciences",
     "School of Medicine": "Medicine",
     "Cardiovascular Medicine": "Medicine",
@@ -78,6 +80,7 @@ def extract_department(lab):
     """Return the best matching Django department name for a Supabase lab row."""
     search_text = " ".join(filter(None, [
         lab.get("department", ""),
+        " ".join(lab.get("titles") or []),
         lab.get("research_area", ""),
         lab.get("lab_affiliation", ""),
         lab.get("research_description", ""),
