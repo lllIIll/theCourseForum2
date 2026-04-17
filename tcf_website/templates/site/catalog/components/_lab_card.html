@@ -1,0 +1,45 @@
+{# Lab Card Component — mirrors _course_card.html #}
+<a href="{% url 'lab_detail' slug=lab.slug %}" class="course-card">
+  <div class="course-card__main">
+    <div class="course-card__header">
+      <span class="course-card__code">{{ lab.pi_name }}</span>
+      {% if lab.title %}
+      <span class="course-card__title">{{ lab.title }}</span>
+      {% endif %}
+    </div>
+
+    <div class="course-card__meta">
+      {% if lab.is_recruiting %}
+      <span class="badge badge--success">Recruiting</span>
+      {% endif %}
+      <span class="course-card__stat">{{ lab.review_count }} review{{ lab.review_count|pluralize }}</span>
+    </div>
+
+    {% if lab.description %}
+    <p class="text-sm text-muted mt-2 line-clamp-2">{{ lab.description|truncatewords:30 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="course-card__ratings">
+    <div class="rating-stat">
+      <div class="rating-stat__value {% if lab.avg_overall and lab.avg_overall >= 4 %}rating-stat__value--success{% elif lab.avg_overall and lab.avg_overall >= 3 %}rating-stat__value--warning{% elif lab.avg_overall %}rating-stat__value--danger{% else %}rating-stat__value--muted{% endif %}">
+        {% if lab.avg_overall %}{{ lab.avg_overall|floatformat:1 }}{% else %}—{% endif %}
+      </div>
+      <div class="rating-stat__label">Rating</div>
+    </div>
+
+    <div class="rating-stat">
+      <div class="rating-stat__value {% if lab.avg_mentorship and lab.avg_mentorship >= 4 %}rating-stat__value--success{% elif lab.avg_mentorship and lab.avg_mentorship >= 3 %}rating-stat__value--warning{% elif lab.avg_mentorship %}rating-stat__value--danger{% else %}rating-stat__value--muted{% endif %}">
+        {% if lab.avg_mentorship %}{{ lab.avg_mentorship|floatformat:1 }}{% else %}—{% endif %}
+      </div>
+      <div class="rating-stat__label">Mentorship</div>
+    </div>
+
+    <div class="rating-stat">
+      <div class="rating-stat__value rating-stat__value--muted">
+        {% if lab.avg_hours %}{{ lab.avg_hours|floatformat:0 }}{% else %}—{% endif %}
+      </div>
+      <div class="rating-stat__label">Hrs/Wk</div>
+    </div>
+  </div>
+</a>

@@ -19,7 +19,7 @@ from .qa import (
     upvote_answer,
     upvote_question,
 )
-from .lab import lab_detail, lab_downvote, lab_upvote, research_guide
+from .lab import lab_department, lab_detail, lab_downvote, lab_upvote, research_guide
 from .review import (
     DeleteReview,
     downvote,

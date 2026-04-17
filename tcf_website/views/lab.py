@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
-from ..models import Lab, LabReview
+from ..models import Department, Lab, LabReview
 
 
 def lab_detail(request, slug):
@@ -115,3 +115,36 @@ def lab_downvote(request, review_id):
 def research_guide(request):
     """Static research guide page."""
     return render(request, "site/lab/research_guide.html", {"mode": "labs"})
+
+
+def lab_department(request, dept_id):
+    """List labs in a department with aggregate metrics."""
+    dept = get_object_or_404(Department, pk=dept_id)
+
+    labs = (
+        Lab.objects.filter(department=dept)
+        .annotate(
+            review_count=Count("labreview", distinct=True),
+            avg_overall=Avg("labreview__overall"),
+            avg_mentorship=Avg("labreview__mentorship"),
+            avg_hours=Avg("labreview__hours_per_week"),
+        )
+        .order_by("-is_recruiting", "pi_name")
+    )
+
+    breadcrumbs = [
+        (dept.school.name, reverse("browse") + "?mode=labs", False),
+        (dept.name, None, True),
+    ]
+
+    return render(
+        request,
+        "site/catalog/lab_department.html",
+        {
+            "mode": "labs",
+            "is_lab": True,
+            "dept": dept,
+            "labs": labs,
+            "breadcrumbs": breadcrumbs,
+        },
+    )

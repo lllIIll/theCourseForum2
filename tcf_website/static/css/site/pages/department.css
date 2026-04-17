@@ -85,6 +85,11 @@
   gap: var(--space-3);
 }
 
+.department-toolbar__subtitle {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+
 /* ===== RECENCY TOGGLE ===== */
 
 .recency-toggle {

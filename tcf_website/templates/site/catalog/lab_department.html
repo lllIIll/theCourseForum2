@@ -1,0 +1,47 @@
+{% extends "site/common/base.html" %}
+{% load static %}
+
+{% block title %}{{ dept.name }} | theCourseForum{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/site/pages/department.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="department-header">
+  <div class="department-header__inner">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      {% for item in breadcrumbs %}
+        {% if item.2 %}
+          <span class="breadcrumb__current">{{ item.0 }}</span>
+        {% else %}
+          <a href="{{ item.1 }}" class="breadcrumb__link">{{ item.0 }}</a>
+          <span class="breadcrumb__separator">/</span>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    <div class="department-toolbar">
+      <h1 class="department-toolbar__title">{{ dept.name }}</h1>
+      <span class="department-toolbar__subtitle">{{ labs|length }} lab{{ labs|length|pluralize }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="department-content">
+  {% if labs %}
+  <div class="course-list">
+    {% for lab in labs %}
+    {% include "site/catalog/components/_lab_card.html" with lab=lab %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2 class="empty-state__title">No labs in this department</h2>
+    <p class="empty-state__description">Check back later as we add more labs.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
