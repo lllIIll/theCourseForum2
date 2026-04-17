@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from ...models import Department, Semester
+from ...utils import parse_mode
 
 
 def department(request, dept_id: int, course_recency=None):
@@ -12,8 +13,7 @@ def department(request, dept_id: int, course_recency=None):
         Department.objects.prefetch_related("subdepartment_set"), pk=dept_id
     )
 
-    if not course_recency:
-        course_recency = str(Semester.latest())
+    mode, _ = parse_mode(request)
 
     breadcrumbs = [
         (dept.school.name, reverse("browse"), False),
@@ -21,6 +21,28 @@ def department(request, dept_id: int, course_recency=None):
     ]
 
     latest_semester = Semester.latest()
+
+    if latest_semester is None:
+        return render(
+            request,
+            "site/catalog/department.html",
+            {
+                "mode": mode,
+                "dept_id": dept_id,
+                "latest_semester": "",
+                "breadcrumbs": breadcrumbs,
+                "paginated_courses": None,
+                "active_course_recency": "",
+                "sortby": "course_id",
+                "order": "asc",
+                "last_five_years": "",
+                "no_course_data": True,
+            },
+        )
+
+    if not course_recency:
+        course_recency = str(latest_semester)
+
     last_five_years = get_object_or_404(Semester, number=latest_semester.number - 50)
     season, year = course_recency.upper().split()
     active_semester = Semester.objects.filter(year=year, season=season).first()
@@ -37,6 +59,7 @@ def department(request, dept_id: int, course_recency=None):
         request,
         "site/catalog/department.html",
         {
+            "mode": mode,
             "dept_id": dept_id,
             "latest_semester": str(latest_semester),
             "breadcrumbs": breadcrumbs,

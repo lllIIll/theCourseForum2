@@ -1,10 +1,11 @@
-{# Lab School Section Component #}
+{# Lab School Section Component — mirrors courses _school_section.html #}
 <div class="school-section">
   <div class="school-header {% if expanded %}is-open{% endif %}" id="school-{{ school.id }}">
     <div class="school-header__info">
       <div class="school-header__icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"></path>
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
         </svg>
       </div>
       <div>
@@ -19,19 +20,13 @@
 
   <div class="departments-grid {% if expanded %}is-open{% endif %}">
     {% for dept in school.departments_with_labs %}
-    <div class="lab-department-card">
-      <h4 class="lab-department-card__title">{{ dept.name }}</h4>
-      <ul class="lab-department-card__list">
-        {% for lab in dept.labs %}
-        <li class="lab-department-card__item">
-          <a href="/lab/{{ lab.slug }}/">{{ lab.pi_name }}</a>
-          {% if lab.is_recruiting %}
-          <span class="badge badge--success" style="font-size: 0.65rem; padding: 2px 6px; margin-left: 4px;">Recruiting</span>
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
+    <a href="{% url 'lab_department' dept_id=dept.pk %}" class="department-card">
+      <span class="department-card__name">{{ dept.name }}</span>
+      <span class="department-card__count">{{ dept.labs|length }} lab{{ dept.labs|length|pluralize }}</span>
+      <svg class="department-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"></path>
+      </svg>
+    </a>
     {% endfor %}
   </div>
 </div>

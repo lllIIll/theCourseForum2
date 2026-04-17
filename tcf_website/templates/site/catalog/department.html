@@ -23,11 +23,28 @@
         {% endif %}
       {% endfor %}
     </nav>
-    
+
+    {% if no_course_data %}
+    <div class="department-toolbar">
+      <h1 class="department-toolbar__title">{{ breadcrumbs.1.0 }}</h1>
+    </div>
+  </div>
+</div>
+
+<div class="department-content">
+  <div class="empty-state">
+    <h2 class="empty-state__title">No course data available</h2>
+    <p class="empty-state__description">
+      Course information hasn't been loaded yet for this site.
+    </p>
+  </div>
+</div>
+{% else %}
+
     <!-- Toolbar -->
     <div class="department-toolbar">
       <h1 class="department-toolbar__title">{{ breadcrumbs.1.0 }}</h1>
-      
+
       <div class="department-toolbar__filters">
         <!-- Recency Toggle -->
         <div class="recency-toggle">
@@ -89,9 +106,10 @@
   </div>
   
   {% include "site/common/components/_pagination.html" with paginated_items=paginated_courses extra_classes="mt-8" aria_label="Course pagination" %}
-  
+
   {% endif %}
 </div>
+{% endif %}
 
 {% endblock %}
 
