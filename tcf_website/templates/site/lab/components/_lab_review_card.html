@@ -61,8 +61,10 @@
               type="button"
               data-action="upvote"
               data-review="{{ review.id }}"
-              data-review-id="{{ review.id }}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              data-review-id="{{ review.id }}"
+              aria-label="Upvote this review"
+              aria-pressed="{% if review.user_vote > 0 %}true{% else %}false{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
           <path d="m5 15 7-7 7 7"/>
         </svg>
         <span>{{ review.sum_votes|default:0 }}</span>
@@ -71,8 +73,10 @@
               type="button"
               data-action="downvote"
               data-review="{{ review.id }}"
-              data-review-id="{{ review.id }}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              data-review-id="{{ review.id }}"
+              aria-label="Downvote this review"
+              aria-pressed="{% if review.user_vote < 0 %}true{% else %}false{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
           <path d="m19 9-7 7-7-7"/>
         </svg>
       </button>

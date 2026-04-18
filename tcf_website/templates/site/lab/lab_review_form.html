@@ -97,8 +97,8 @@
       <div class="rating-grid">
 
         <div class="rating-field">
-          <label class="rating-field__label">Overall <span style="color: var(--danger);">*</span></label>
-          <div class="rating-options">
+          <label class="rating-field__label" id="id_overall_label">Overall <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_overall_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="overall" value="{{ i }}"
@@ -114,8 +114,8 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Mentorship <span style="color: var(--danger);">*</span></label>
-          <div class="rating-options">
+          <label class="rating-field__label" id="id_mentorship_label">Mentorship <span style="color: var(--danger);">*</span></label>
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_mentorship_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="mentorship" value="{{ i }}"
@@ -131,9 +131,9 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Independence <span style="color: var(--danger);">*</span></label>
+          <label class="rating-field__label" id="id_independence_label">Independence <span style="color: var(--danger);">*</span></label>
           <p class="rating-field__hint">How much autonomy do you have over your research direction? (1 = very directed, 5 = fully autonomous)</p>
-          <div class="rating-options">
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_independence_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="independence" value="{{ i }}"
@@ -149,9 +149,9 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Lab Culture <span style="color: var(--danger);">*</span></label>
+          <label class="rating-field__label" id="id_lab_culture_label">Lab Culture <span style="color: var(--danger);">*</span></label>
           <p class="rating-field__hint">How welcoming and collaborative is the overall lab environment?</p>
-          <div class="rating-options">
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_lab_culture_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="lab_culture" value="{{ i }}"
@@ -167,9 +167,9 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Advisor Responsiveness <span style="color: var(--danger);">*</span></label>
+          <label class="rating-field__label" id="id_responsiveness_label">Advisor Responsiveness <span style="color: var(--danger);">*</span></label>
           <p class="rating-field__hint">How quickly does the PI or mentor respond to emails and questions? (1 = very slow / unresponsive, 5 = very prompt)</p>
-          <div class="rating-options">
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_responsiveness_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="responsiveness" value="{{ i }}"
@@ -185,9 +185,9 @@
         </div>
 
         <div class="rating-field">
-          <label class="rating-field__label">Entry Bar <span style="color: var(--danger);">*</span></label>
+          <label class="rating-field__label" id="id_entry_selectivity_label">Entry Bar <span style="color: var(--danger);">*</span></label>
           <p class="rating-field__hint">How hard was it to get into this lab? (1 = very open / no requirements, 5 = highly selective / strong GPA + experience required)</p>
-          <div class="rating-options">
+          <div class="rating-options" role="radiogroup" aria-labelledby="id_entry_selectivity_label">
             {% for i in "12345" %}
             <label class="rating-option">
               <input type="radio" name="entry_selectivity" value="{{ i }}"
@@ -207,8 +207,8 @@
 
     {# ===== Section 3: Would You Recommend? ===== #}
     <section class="review-section">
-      <h2 class="review-section__title">Would you recommend this lab?</h2>
-      <div class="recommend-toggle" style="display: flex; gap: var(--space-3);">
+      <h2 class="review-section__title" id="id_would_recommend_label">Would you recommend this lab?</h2>
+      <div class="recommend-toggle" style="display: flex; gap: var(--space-3);" role="radiogroup" aria-labelledby="id_would_recommend_label">
         <label class="btn {% if form.would_recommend.value == 'True' %}btn--accent{% else %}btn--secondary{% endif %}"
                style="cursor: pointer; user-select: none;">
           <input type="radio" name="would_recommend" value="True" hidden
