@@ -4,6 +4,28 @@
 Exercises upvote/downvote/count_votes uniformly across every concrete
 subclass (Review, LabReview, Question, Answer) to confirm the abstract
 behavior is identical regardless of which vote table backs the object.
+
+How the test suite is organized
+-------------------------------
+The pattern here is design-by-contract:
+
+1. ``_VotableContractMixin`` defines seven behavioral checks every
+   Votable subclass must satisfy: starting at zero votes, single
+   upvote/downvote, toggle-off on re-vote, replace upvote with
+   downvote, aggregation across multiple users.
+2. Each concrete subclass under test (Review, LabReview, Question,
+   Answer) gets its own ``TestCase`` that inherits both
+   ``_VotableContractMixin`` and ``django.test.TestCase``. The
+   subclass only writes ``setUp`` to build the object under test
+   and assigns it to ``self.target``.
+3. Django's test runner discovers each TestCase, runs all seven
+   inherited checks against that subclass's ``self.target``, and
+   reports per-class results. Total: 7 checks x 4 subclasses = 28
+   independent test runs from one suite of assertions.
+
+To add a fifth Votable-using class later, add a new TestCase that
+inherits the mixin and writes ``setUp``. No assertions need to be
+copied or maintained.
 """
 
 from django.test import TestCase
@@ -34,8 +56,10 @@ def _make_users(n=2):
 class _VotableContractMixin:
     """Shared assertions every Votable subclass must satisfy.
 
-    Subclasses provide ``self.target`` (the votable instance) via setUp
-    and run the same suite of behavioral checks against it.
+    Subclasses provide ``self.target`` (the votable instance) in
+    ``setUp`` and run the same suite of behavioral checks against it.
+    The leading underscore signals this is a test-helper base, not a
+    concrete TestCase the runner should pick up directly.
     """
 
     target = None  # set by subclass setUp
