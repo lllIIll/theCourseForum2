@@ -169,3 +169,78 @@ class LabVoteTestCase(TestCase):
         LabVote.objects.create(value=1, user=self.user, review=self.review)
         with self.assertRaises(IntegrityError):
             LabVote.objects.create(value=-1, user=self.user, review=self.review)
+
+
+class LabReviewDefaultsAndStrTestCase(TestCase):
+    """Defaults, __str__ format, and ordering edge cases on LabReview."""
+
+    def setUp(self):
+        self.school = School.objects.create(name="Engineering")
+        self.department = Department.objects.create(
+            name="CS", school=self.school
+        )
+        self.lab = Lab.objects.create(
+            pi_name="Default Tester", department=self.department
+        )
+        self.user = User.objects.create(
+            username="defaults_user", computing_id="def1"
+        )
+
+    def _build(self, **overrides):
+        kwargs = {
+            "lab": self.lab,
+            "user": self.user,
+            "overall": 3,
+            "mentorship": 3,
+            "lab_culture": 3,
+            "responsiveness": 3,
+            "independence": 3,
+            "entry_selectivity": 3,
+            "hours_per_week": 5,
+            "role": "undergrad_ra",
+            "period": "Spring 2025",
+        }
+        kwargs.update(overrides)
+        return LabReview.objects.create(**kwargs)
+
+    def test_would_recommend_defaults_true(self):
+        """LabReview.would_recommend defaults to True when not provided."""
+        review = self._build()
+        self.assertTrue(review.would_recommend)
+
+    def test_hidden_defaults_false(self):
+        """LabReview.hidden defaults to False so reviews are visible."""
+        review = self._build()
+        self.assertFalse(review.hidden)
+
+    def test_toxicity_rating_defaults_zero(self):
+        """LabReview.toxicity_rating defaults to 0 (clean)."""
+        review = self._build()
+        self.assertEqual(review.toxicity_rating, 0)
+
+    def test_text_defaults_empty(self):
+        """LabReview.text is optional and defaults to empty string."""
+        review = self._build()
+        self.assertEqual(review.text, "")
+
+    def test_str_format(self):
+        """__str__ uses 'Lab review by <user> for <lab>'."""
+        review = self._build()
+        rendered = str(review)
+        self.assertIn("Lab review by", rendered)
+        self.assertIn(str(self.user), rendered)
+        self.assertIn(str(self.lab), rendered)
+
+    def test_ordering_stable_on_tied_vote_counts(self):
+        """Sort('Most Helpful') with tied vote counts returns all reviews
+        in a deterministic order without crashing."""
+        users = [
+            User.objects.create(username=f"o{i}", computing_id=f"ord{i}")
+            for i in range(3)
+        ]
+        reviews = [
+            self._build(user=users[i], hours_per_week=i + 1) for i in range(3)
+        ]
+        sorted_qs = LabReview.sort(LabReview.objects.all(), "Most Helpful")
+        result_ids = list(sorted_qs.values_list("id", flat=True))
+        self.assertEqual(set(result_ids), {r.id for r in reviews})
