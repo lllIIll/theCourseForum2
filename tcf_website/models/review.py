@@ -30,10 +30,11 @@ from django.db.models.functions import Abs, Coalesce, Concat, Round
 from tcf_website.pagination import paginate
 
 from .course import Course, Instructor, Semester
+from .mixins import Votable
 from .user import User
 
 
-class Review(models.Model):
+class Review(Votable):
     """Review model.
 
     Belongs to a User.
@@ -120,64 +121,9 @@ class Review(models.Model):
         """Average score for review."""
         return (self.instructor_rating + self.recommendability + self.enjoyability) / 3
 
-    def count_votes(self):
-        """Sum votes for review."""
-        return self.vote_set.aggregate(
-            upvotes=Coalesce(models.Sum("value", filter=models.Q(value=1)), 0),
-            downvotes=Coalesce(Abs(models.Sum("value", filter=models.Q(value=-1))), 0),
-        )
-
-    def upvote(self, user):
-        """Create an upvote."""
-
-        # Check if already upvoted.
-        upvoted = Vote.objects.filter(
-            user=user,
-            review=self,
-            value=1,
-        ).exists()
-
-        # Delete all prior votes.
-        Vote.objects.filter(
-            user=user,
-            review=self,
-        ).delete()
-
-        # Don't upvote again if previously upvoted.
-        if upvoted:
-            return
-
-        Vote.objects.create(
-            value=1,
-            user=user,
-            review=self,
-        )
-
-    def downvote(self, user):
-        """Create a downvote."""
-
-        # Check if already downvoted.
-        downvoted = Vote.objects.filter(
-            user=user,
-            review=self,
-            value=-1,
-        ).exists()
-
-        # Delete all prior votes.
-        Vote.objects.filter(
-            user=user,
-            review=self,
-        ).delete()
-
-        # Don't downvote again if previously downvoted.
-        if downvoted:
-            return
-
-        Vote.objects.create(
-            value=-1,
-            user=user,
-            review=self,
-        )
+    @property
+    def _vote_manager(self):
+        return self.vote_set
 
     @staticmethod
     def get_sorted_reviews(course_id, instructor_id, user, method=""):

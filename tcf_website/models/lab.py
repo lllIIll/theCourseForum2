@@ -28,6 +28,7 @@ from django.db.models import (
 from django.db.models.functions import Abs, Coalesce, Concat, Round
 
 from .course import Department
+from .mixins import Votable
 from .user import User
 
 
@@ -115,7 +116,7 @@ class Lab(models.Model):
         ]
 
 
-class LabReview(models.Model):
+class LabReview(Votable):
     """Lab review model.
 
     Belongs to a User and a Lab.
@@ -180,26 +181,9 @@ class LabReview(models.Model):
     # Review modified date. Required.
     modified = models.DateTimeField(auto_now=True)
 
-    def count_votes(self):
-        """Sum votes for lab review."""
-        return self.labvote_set.aggregate(
-            upvotes=Coalesce(models.Sum("value", filter=models.Q(value=1)), 0),
-            downvotes=Coalesce(Abs(models.Sum("value", filter=models.Q(value=-1))), 0),
-        )
-
-    def upvote(self, user):
-        """Create an upvote."""
-        upvoted = LabVote.objects.filter(user=user, review=self, value=1).exists()
-        LabVote.objects.filter(user=user, review=self).delete()
-        if not upvoted:
-            LabVote.objects.create(value=1, user=user, review=self)
-
-    def downvote(self, user):
-        """Create a downvote."""
-        downvoted = LabVote.objects.filter(user=user, review=self, value=-1).exists()
-        LabVote.objects.filter(user=user, review=self).delete()
-        if not downvoted:
-            LabVote.objects.create(value=-1, user=user, review=self)
+    @property
+    def _vote_manager(self):
+        return self.labvote_set
 
     @staticmethod
     def sort(reviews, method=""):
