@@ -81,6 +81,13 @@ jobs:
         run: |
           echo "percentage=$(coverage report | grep -o '[0-9]\+%' | tail -1)" >> $GITHUB_OUTPUT
 
+      - name: Enforce coverage threshold
+        # Baseline measured at 56.55% on 2026-04-24. Threshold is set 1.5%
+        # below baseline so new code can land without manual coverage edits
+        # while still failing forward-progress regressions. Raise this number
+        # as coverage improves rather than letting it drift.
+        run: coverage report --fail-under=55
+
   eslint:
     runs-on: ubuntu-latest
     steps:
