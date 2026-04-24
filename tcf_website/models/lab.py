@@ -75,17 +75,40 @@ class Lab(models.Model):
     combined_search_text = models.CharField(max_length=1024, blank=True, editable=False)
 
     def save(self, *args, **kwargs):
-        """Auto-generate slug from pi_name and compute combined_search_text."""
+        """Persist Lab; derive slug + search text before delegating to super().
+
+        Two pieces of derived state get computed here so callers
+        (including the bulk-import management commands) don't have
+        to remember to set them by hand:
+
+        1. ``slug`` — URL identifier used in /lab/<slug>/. If the
+           caller didn't set it, slugify the PI's name and append
+           "-2", "-3", ... until we find one that isn't already
+           taken. The exclude(pk=self.pk) lets save() be safe to
+           call repeatedly on the same row.
+        2. ``combined_search_text`` — the haystack for the GIN
+           trigram index defined in Meta.indexes. Concatenating
+           pi_name + research_areas + department name into one
+           field lets the search view do a single ILIKE match
+           instead of OR-joining three separate columns. Capped
+           at 1024 chars to match the column definition.
+        """
         if not self.slug:
             from django.utils.text import slugify
 
             base_slug = slugify(self.pi_name)
             slug = base_slug
             counter = 2
+            # Linear probe for an unused slug. Collisions are rare
+            # (different PIs with the same name), so a tight loop is
+            # fine here; no need for a randomized suffix.
             while Lab.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+
+        # Build the search haystack from any non-empty parts; the
+        # filter avoids dangling spaces if research_areas is blank.
         parts = [self.pi_name, self.research_areas, self.department.name]
         self.combined_search_text = " ".join(p for p in parts if p)[:1024]
         super().save(*args, **kwargs)
@@ -188,7 +211,22 @@ class LabReview(Votable):
 
     @staticmethod
     def sort(reviews, method=""):
-        """Sort reviews by given method."""
+        """Apply the user-selected sort to a LabReview queryset.
+
+        ``method`` is the raw value of the ?method= query string from
+        the lab detail page, so the case strings here have to match
+        the option labels in the template's sort dropdown exactly.
+
+        "Most Helpful" annotates each row with up/down vote counts,
+        derives a helpful_score = upvotes - downvotes via Django's
+        ExpressionWrapper, and sorts by that score descending. The
+        annotation is computed in SQL, so it scales as the vote
+        table grows.
+
+        Any unknown method (including the literal "Default") returns
+        the queryset untouched, deferring to the model's default
+        Meta.ordering or the caller's earlier order_by.
+        """
         match method:
             case "Most Helpful":
                 return reviews.annotate(
@@ -212,7 +250,15 @@ class LabReview(Votable):
 
     @staticmethod
     def paginate(reviews, page_number, per_page=10):
-        """Paginate reviews."""
+        """Wrap a sorted review queryset in a Django Paginator.
+
+        Defaults to ten reviews per page (matches the lab detail
+        template's pagination footer). The two except branches make
+        the view tolerant of bad ?page= values:
+
+        - PageNotAnInteger: "page=foo" -> snap to page 1.
+        - EmptyPage: "page=999" past the last page -> snap to last.
+        """
         paginator = Paginator(reviews, per_page)
         try:
             return paginator.page(page_number)
