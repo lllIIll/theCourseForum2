@@ -27,6 +27,8 @@ _theCourseForum_ team is a group of students that contribute their time and effo
 
 ## [Developer Information](doc/dev.md)
 
+For codebase layout and how data flows through the system, see [doc/architecture.md](doc/architecture.md). For contribution conventions, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Want to get involved?
 
 Don't hesitate to contact us whether or not that you are at the University of Virginia! We love to talk about our app and we love to discuss everything that we do! Join our [Discord server](https://discord.com/invite/tAjzH7eyvW) or shoot us an email at [info@thecourseforum.com](mailto:info@thecourseforum.com).
