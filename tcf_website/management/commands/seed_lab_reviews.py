@@ -56,6 +56,7 @@ class Command(BaseCommand):
     help = "Seed sample lab reviews for development UI preview."
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "--all",
             action="store_true",
@@ -68,6 +69,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         User = get_user_model()
 
         if options["clear"]:

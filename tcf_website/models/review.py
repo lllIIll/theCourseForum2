@@ -123,6 +123,7 @@ class Review(Votable):
 
     @property
     def _vote_manager(self):
+        """Return the reverse manager pointing at this object's vote table."""
         return self.vote_set
 
     @staticmethod
@@ -199,6 +200,7 @@ class Review(Votable):
         return paginate(reviews, page_number)
 
     def __str__(self):
+        """Return human-readable representation of Review."""
         return f"Review by {self.user} for {self.course} taught by {self.instructor}"
 
     class Meta:
@@ -229,6 +231,7 @@ class Vote(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE)
 
     def __str__(self):
+        """Return human-readable representation of Vote."""
         return f"Vote of value {self.value} for {self.review} by {self.user}"
 
     class Meta:
@@ -256,6 +259,7 @@ class ReviewLLMSummary(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """Return human-readable representation of ReviewLLMSummary."""
         return f"Summary for {self.course} / {self.instructor}"
 
     class Meta:

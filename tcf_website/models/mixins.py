@@ -23,6 +23,7 @@ class Votable(models.Model):
 
     @property
     def _vote_manager(self):
+        """Return the reverse manager pointing at this object's vote table."""
         raise NotImplementedError(
             "Votable subclasses must define a _vote_manager property "
             "returning the reverse manager for their vote table."

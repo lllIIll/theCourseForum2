@@ -107,6 +107,7 @@ class Command(BaseCommand):
     help = "Fetch club data from UVA's Presence API and write to a CSV file."
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "--output",
             default="tcf_website/management/commands/club_data/csv/clubs.csv",
@@ -114,6 +115,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         csv_file = options["output"]
         self.stdout.write(f"Fetching club data and writing to {csv_file}...")
         write_csv(csv_file)

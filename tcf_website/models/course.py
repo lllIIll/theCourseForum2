@@ -72,6 +72,7 @@ class Department(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
+        """Return human-readable representation of Department."""
         return self.name
 
     # Fetches all courses in a department within the past `num_of_years' years
@@ -167,6 +168,7 @@ class Subdepartment(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
+        """Return human-readable representation of Subdepartment."""
         return f"{self.mnemonic} - {self.name}"
 
     def has_current_course(self):
@@ -208,6 +210,7 @@ class Instructor(models.Model):
     hidden = models.BooleanField(default=False)
 
     def __str__(self):
+        """Return human-readable representation of Instructor."""
         return f"{self.first_name} {self.last_name} ({self.email})"
 
     # this implementation is the same as average_rating in Course
@@ -330,6 +333,7 @@ class Instructor(models.Model):
         )["average__avg"]
 
     def save(self, *args, **kwargs):
+        """Persist Instructor, running model-specific bookkeeping before delegating to super()."""
         self.full_name = f"{self.first_name} {self.last_name}".strip()
         super().save(*args, **kwargs)
 
@@ -459,9 +463,11 @@ class Semester(models.Model):
     number = models.IntegerField(help_text="As defined in SIS/Lou's List", unique=True)
 
     def __repr__(self):
+        """Return debug representation of Semester."""
         return f"{self.year} {self.season.title()} ({self.number})"
 
     def __str__(self):
+        """Return human-readable representation of Semester."""
         return f"{self.season.title()} {self.year}"
 
     def is_after(self, other_sem):
@@ -493,6 +499,7 @@ class Discipline(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
+        """Return human-readable representation of Discipline."""
         return self.name
 
 
@@ -524,9 +531,11 @@ class Course(models.Model):
     combined_mnemonic_number = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
+        """Return human-readable representation of Course."""
         return f"{self.subdepartment.mnemonic} {self.number} | {self.title}"
 
     def save(self, *args, **kwargs):
+        """Persist Course, running model-specific bookkeeping before delegating to super()."""
         self.combined_mnemonic_number = (
             f"{self.subdepartment.mnemonic} {self.number}".strip()
         )
@@ -836,6 +845,7 @@ class CourseGrade(models.Model):
     total_enrolled = models.IntegerField(default=0)
 
     def __str__(self):
+        """Return human-readable representation of CourseGrade."""
         return (
             f"{self.course.subdepartment.mnemonic} {self.course.number} {self.average}"
         )
@@ -863,6 +873,7 @@ class CourseInstructorGrade(models.Model):
     total_enrolled = models.IntegerField(default=0)
 
     def __str__(self):
+        """Return human-readable representation of CourseInstructorGrade."""
         return (
             f"{self.instructor.first_name} {self.instructor.last_name} "
             f"{self.course.subdepartment.mnemonic} {self.course.number} {self.average}"
@@ -924,6 +935,7 @@ class Section(models.Model):
     waitlist_limit = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
+        """Return human-readable representation of Section."""
         return (
             f"{self.course} | {self.semester} | "
             f"{', '.join(str(i) for i in self.instructors.all())}"
@@ -967,6 +979,7 @@ class SectionTime(models.Model):
     end_time = models.TimeField()
 
     def __str__(self):
+        """Return human-readable representation of SectionTime."""
         days = []
         if self.monday:
             days.append("MON")

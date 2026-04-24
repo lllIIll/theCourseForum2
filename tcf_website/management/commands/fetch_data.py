@@ -239,6 +239,7 @@ COURSE_DATA_DIR = "tcf_website/management/commands/semester_data/csv/"
 
 # test SIS data against Lous List data
 def compare_csv_files(lous_list_file_path, sis_file_path):
+    """Compare csv files."""
     with open(sis_file_path, "r") as sis_file:
         sis_reader = csv.reader(sis_file)
         with open(
@@ -275,6 +276,7 @@ class Command(BaseCommand):
     help = "Fetches data from SIS API for the specified semester and saves it to a CSV file"
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "semester",
             type=str,
@@ -282,6 +284,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         semester = options["semester"]
         if (
             len(elements := semester.split("_")) != 2

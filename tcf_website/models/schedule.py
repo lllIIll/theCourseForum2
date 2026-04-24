@@ -44,6 +44,7 @@ class Schedule(models.Model):
     share_token = models.UUIDField(null=True, blank=True, unique=True, db_index=True)
 
     def __str__(self):
+        """Return human-readable representation of Schedule."""
         return self.name
 
     class Meta:
@@ -310,6 +311,7 @@ class ScheduleBookmark(models.Model):
         ]
 
     def __str__(self):
+        """Return human-readable representation of ScheduleBookmark."""
         return f"{self.viewer_id} bookmarks {self.schedule_id}"
 
 
@@ -333,4 +335,5 @@ class ScheduledCourse(models.Model):
     enrolled_units = models.IntegerField(default=0)
 
     def __str__(self):
+        """Return human-readable representation of ScheduledCourse."""
         return f"{self.section.course} | {self.instructor}"

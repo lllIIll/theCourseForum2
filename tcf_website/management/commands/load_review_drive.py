@@ -31,6 +31,7 @@ class Command(BaseCommand):
     )
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "semester",
             help=(
@@ -48,6 +49,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         verbose = options["verbose"]
         semester: str = options["semester"]
 

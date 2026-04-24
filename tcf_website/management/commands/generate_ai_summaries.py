@@ -80,6 +80,7 @@ def _resolve_semester(raw):
 
 
 def _build_messages(course, instructor, reviews):
+    """Build messages."""
     bullets = []
     for r in reviews:
         text = (r.text or "").strip()[:MAX_REVIEW_CHARS]
@@ -198,6 +199,7 @@ class Command(BaseCommand):
     help = "Generate AI review summaries via OpenRouter."
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument("--model", help="OpenRouter model ID (required)")
         parser.add_argument(
             "--limit", type=int, default=500, help="Max pairs to process (default: 500)"
@@ -225,9 +227,11 @@ class Command(BaseCommand):
         )
 
     def _run_summaries_parallel(self, pairs, model_id, dry_run):
+        """Run summaries parallel."""
         session = create_session()
 
         def _summarize(row):
+            """Summarize."""
             return summarize_one(session, row, model_id, dry_run)
 
         with ThreadPoolExecutor(max_workers=WORKERS) as pool:
@@ -240,6 +244,7 @@ class Command(BaseCommand):
             )
 
     def _report_pair_results(self, pairs, results):
+        """Report pair results."""
         error_count = 0
         for row, result in zip(pairs, results):
             if result is None:
@@ -259,6 +264,7 @@ class Command(BaseCommand):
         return error_count
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         start = time.time()
 
         model_id = options["model"]
@@ -287,6 +293,7 @@ class Command(BaseCommand):
             raise CommandError(f"{error_count} pair(s) failed.")
 
     def _get_pairs(self, options):
+        """Get pairs."""
         semester = _resolve_semester(options["semester"])
         qs = Review.objects.exclude(text="").filter(
             hidden=False, toxicity_rating__lt=settings.TOXICITY_THRESHOLD

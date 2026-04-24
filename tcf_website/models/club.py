@@ -41,6 +41,7 @@ class ClubCategory(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
 
     def __str__(self):
+        """Return human-readable representation of ClubCategory."""
         return self.name
 
 
@@ -61,10 +62,12 @@ class Club(models.Model):
 
     def save(self, *args, **kwargs):
         # maintain combined_name for trigram search
+        """Persist Club, running model-specific bookkeeping before delegating to super()."""
         self.combined_name = self.name
         super().save(*args, **kwargs)
 
     def __str__(self):
+        """Return human-readable representation of Club."""
         return self.name
 
     class Meta:

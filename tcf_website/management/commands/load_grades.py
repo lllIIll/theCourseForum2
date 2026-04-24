@@ -27,6 +27,7 @@ class Command(BaseCommand):
     help = "Imports FOIAed grade data files into PostgreSQL database"
 
     def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
+        """Init."""
         super().__init__(stdout, stderr, no_color, force_color)
 
         # Initialize some variables that get used everywhere
@@ -240,6 +241,7 @@ class Command(BaseCommand):
         # Helper function because we basically do the same thing twice
         def add_entry(data_dict, identifier):
             # Load this semester into dictionary
+            """Add entry."""
             if identifier in data_dict:
                 # Average needs to be computed separately instead of incrementing
                 prev_data = data_dict[identifier]

@@ -17,6 +17,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
 
         # Named (optional) arguments
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "--verbose",
             action="store_true",
@@ -31,6 +32,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        """Entry point for the management command."""
         self.verbose = options["verbose"]
 
         self.UNKNOWN_SCHOOL, _ = School.objects.get_or_create(name="Miscellaneous")
@@ -61,9 +63,11 @@ class Command(BaseCommand):
         print("Completed. Hooray!")
 
     def clean(self, df):
+        """Clean."""
         return df.dropna(subset=["Mnemonic", "ClassNumber", "Number", "Section"])
 
     def load_semester_file(self, file):
+        """Load semester file."""
         year, semester = file.split(".")[0].split("_")
         year = int(year)
         season = semester.upper()
@@ -86,6 +90,7 @@ class Command(BaseCommand):
             # break
 
     def load_semester(self, year, season):
+        """Load semester."""
         year_code = str(year)[-2:]
         season_code = {"FALL": 8, "SUMMER": 6, "SPRING": 2, "JANUARY": 1}[season]
         semester_code = int(f"1{year_code}{season_code}")
@@ -105,6 +110,7 @@ class Command(BaseCommand):
         return sem
 
     def load_section_row(self, semester, row):
+        """Load section row."""
         try:
             mnemonic = row["Mnemonic"]  # may NOT be missing
             sis_number = row["ClassNumber"]  # may NOT be missing
@@ -161,6 +167,7 @@ class Command(BaseCommand):
 
     def load_subdepartment(self, mnemonic):
 
+        """Load subdepartment."""
         try:
             sd = Subdepartment.objects.get(
                 mnemonic=mnemonic,
@@ -181,6 +188,7 @@ class Command(BaseCommand):
         self, title, description, disciplines, semester, subdepartment, number
     ):
 
+        """Load course."""
         params = {}
         fields = {"title", "description", "subdepartment", "number"}
         for k, v in locals().items():
@@ -229,6 +237,7 @@ class Command(BaseCommand):
         return course
 
     def load_instructors(self, instructor_names):
+        """Load instructors."""
         if not instructor_names:
             return [self.STAFF]
         instructors = set()
@@ -332,6 +341,7 @@ class Command(BaseCommand):
         # Could maybe use `update_or_create`, but I couldn't resolve some
         # errors.
 
+        """Load section."""
         unique_params = {}
         params = {}
 
@@ -378,6 +388,7 @@ class Command(BaseCommand):
                 print(f"Retrieved {section}")
 
         def parse_section_times(section_times_str):
+            """Parse section times."""
             if not section_times_str:
                 return []
 

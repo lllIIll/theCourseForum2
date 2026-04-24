@@ -24,6 +24,7 @@ class User(AbstractUser):
     )
 
     def __str__(self):
+        """Return human-readable representation of User."""
         return f"{self.first_name} {self.last_name} ({self.email})"
 
     def full_name(self):

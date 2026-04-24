@@ -60,6 +60,7 @@ class Command(BaseCommand):
     help = "Import lab reviews from Supabase into the local database."
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         self.stdout.write("Fetching reviews from Supabase...")
         try:
             rows = fetch_reviews_from_supabase()

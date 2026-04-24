@@ -44,10 +44,12 @@ class Question(Votable):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Return human-readable representation of Question."""
         return f"Question for {self.course}"
 
     @property
     def _vote_manager(self):
+        """Return the reverse manager pointing at this object's vote table."""
         return self.votequestion_set
 
     @staticmethod
@@ -88,10 +90,12 @@ class Answer(Votable):
     semester = models.ForeignKey("Semester", on_delete=models.CASCADE, default=None)
 
     def __str__(self):
+        """Return human-readable representation of Answer."""
         return f"Answer for {self.question}"
 
     @property
     def _vote_manager(self):
+        """Return the reverse manager pointing at this object's vote table."""
         return self.voteanswer_set
 
     @staticmethod
@@ -144,6 +148,7 @@ class VoteQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
     def __str__(self):
+        """Return human-readable representation of VoteQuestion."""
         return f"Vote of value {self.value} for {self.question} by {self.user}"
 
     class Meta:
@@ -176,6 +181,7 @@ class VoteAnswer(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
 
     def __str__(self):
+        """Return human-readable representation of VoteAnswer."""
         return f"Vote of value {self.value} for {self.answer} by {self.user}"
 
     class Meta:

@@ -183,6 +183,7 @@ class LabReview(Votable):
 
     @property
     def _vote_manager(self):
+        """Return the reverse manager pointing at this object's vote table."""
         return self.labvote_set
 
     @staticmethod

@@ -80,11 +80,13 @@ class Command(BaseCommand):
     help = "Fetch current enrollment data for all sections in a semester"
 
     def add_arguments(self, parser):
+        """Register CLI arguments for the management command."""
         parser.add_argument(
             "--semester", help='Semester number, e.g. "1268". Defaults to latest.'
         )
 
     def handle(self, *args, **options):
+        """Entry point for the management command."""
         start = time.time()
 
         semester = (
@@ -102,6 +104,7 @@ class Command(BaseCommand):
 
         # ── Fetch all sections concurrently ──
         def _fetch(section):
+            """Fetch."""
             return fetch_one(session, term, section)
 
         with ThreadPoolExecutor(max_workers=WORKERS) as pool:
