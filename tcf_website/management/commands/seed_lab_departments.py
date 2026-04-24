@@ -35,6 +35,7 @@ class Command(BaseCommand):
     help = "Seed schools and departments needed for lab data"
 
     def handle(self, *args, **options):
+        """Idempotently create the schools and departments load_labs depends on."""
         created_schools = 0
         created_depts = 0
 
